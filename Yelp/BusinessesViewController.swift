@@ -21,6 +21,11 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
         tableView.delegate = self
         tableView.dataSource = self
         
+        // set the rowHeight to UITableViewAutomaticDimension to get the self-sizing behavior we want for the cell.
+        tableView.rowHeight = UITableViewAutomaticDimension
+        // set estimatedRowHeight to improve performance of loading the tableView
+        tableView.estimatedRowHeight = 120
+        
         Business.searchWithTerm(term: "Thai", completion: { (businesses: [Business]?, error: Error?) -> Void in
             
             self.businesses = businesses
