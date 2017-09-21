@@ -50,6 +50,10 @@ class Business: NSObject {
             }
         }
         
+        // TEMP - add additional text to name to make it wrap
+        address += " And some more text so this wraps"
+        
+        
         self.address = address
         
         let categoriesArray = dictionary["categories"] as? [[String]]

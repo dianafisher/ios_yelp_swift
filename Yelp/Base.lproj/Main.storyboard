@@ -59,8 +59,8 @@
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="88 Division St, Mission Bay" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="37Q-gb-OJA">
-                                                    <rect key="frame" x="81" y="49" width="164" height="16"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="88 Division St, Mission Bay" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="37Q-gb-OJA">
+                                                    <rect key="frame" x="81" y="49" width="325" height="16"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -96,6 +96,7 @@
                                                 <constraint firstItem="N8a-Vf-LlH" firstAttribute="top" secondItem="QAQ-k4-YT2" secondAttribute="topMargin" constant="2" id="R5p-Vl-SwQ"/>
                                                 <constraint firstAttribute="trailing" secondItem="TfL-On-2K6" secondAttribute="trailing" constant="8" id="ReZ-2t-KBi"/>
                                                 <constraint firstItem="37Q-gb-OJA" firstAttribute="leading" secondItem="kNe-6A-wRF" secondAttribute="trailing" constant="8" id="TM4-So-gOg"/>
+                                                <constraint firstAttribute="trailing" secondItem="37Q-gb-OJA" secondAttribute="trailing" constant="8" id="e8g-AY-vaZ"/>
                                                 <constraint firstItem="9wd-Vv-1dO" firstAttribute="leading" secondItem="kNe-6A-wRF" secondAttribute="trailing" constant="8" id="ef6-QL-5pa"/>
                                                 <constraint firstItem="TfL-On-2K6" firstAttribute="top" secondItem="N8a-Vf-LlH" secondAttribute="bottom" constant="5" id="elk-3k-3uh"/>
                                                 <constraint firstItem="nHd-sg-amz" firstAttribute="leading" secondItem="kNe-6A-wRF" secondAttribute="trailing" constant="8" id="mZU-JJ-2mW"/>
