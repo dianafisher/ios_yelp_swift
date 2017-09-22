@@ -21,21 +21,41 @@ class BusinessCell: UITableViewCell {
     var business: Business! {
         didSet {
             nameLabel.text = business.name
-            thumbImageView.setImageWith(business.imageURL!)
             categoriesLabel.text = business.categories
             addressLabel.text = business.address
             reviewCountLabel.text = "\(business.reviewCount!) Reviews"
             ratingImageView.setImageWith(business.ratingImageURL!)
             distanceLabel.text = business.distance
+            
+            if let thumbUrl = business.imageURL
+            {
+                let imageRequest = URLRequest(url: thumbUrl)
+                thumbImageView.setImageWith(
+                    imageRequest,
+                    placeholderImage: UIImage(named: "placeholder"),
+                    success: { (imageRequest, imageResponse, image) -> Void in
+                        if imageResponse != nil {
+                            self.thumbImageView.alpha = 0.0
+                            self.thumbImageView.image = image
+                            UIView.animate(withDuration: 0.3, animations: { () -> Void in
+                                self.thumbImageView.alpha = 1.0
+                            })
+                        } else {
+                            self.thumbImageView.image = image
+                        }
+                        
+                }, failure: { (imageRequest, imageResponse, error) -> Void in
+                    print(error)
+                    self.thumbImageView.image = UIImage(named: "placeholder")
+                })
+            } else {
+                thumbImageView.image = UIImage(named: "placeholder")
+            }
         }
     }
     
-    
-    
-    
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
         
         // round the corners of the UIImageView
         thumbImageView.layer.cornerRadius = 3

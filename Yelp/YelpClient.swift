@@ -63,6 +63,8 @@ class YelpClient: BDBOAuth1RequestOperationManager {
             parameters["deals_filter"] = deals! as AnyObject?
         }
         
+        parameters["radius_filter"] = "480" as AnyObject
+        
         parameters["limit"] = limit as AnyObject
         parameters["offset"] = offset as AnyObject
         
@@ -71,6 +73,7 @@ class YelpClient: BDBOAuth1RequestOperationManager {
         return self.get("search", parameters: parameters,
                         success: { (operation: AFHTTPRequestOperation, response: Any) -> Void in
                             if let response = response as? [String: Any]{
+                                print(response)
                                 let dictionaries = response["businesses"] as? [NSDictionary]
                                 if dictionaries != nil {
                                     completion(Business.businesses(array: dictionaries!), nil)
@@ -100,11 +103,17 @@ class YelpClient: BDBOAuth1RequestOperationManager {
             parameters["deals_filter"] = deals! as AnyObject?
         }
         
+        parameters["radius_filter"] = "482" as AnyObject
+        
         print(parameters)
         
         return self.get("search", parameters: parameters,
                         success: { (operation: AFHTTPRequestOperation, response: Any) -> Void in
                             if let response = response as? [String: Any]{
+//                                print(response)
+                                let total = response["total"] as? Int
+                                print("total \(total ?? 0)")
+                                
                                 let dictionaries = response["businesses"] as? [NSDictionary]
                                 if dictionaries != nil {
                                     completion(Business.businesses(array: dictionaries!), nil)

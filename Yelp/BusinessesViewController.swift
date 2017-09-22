@@ -8,7 +8,7 @@
 
 import UIKit
 
-class BusinessesViewController: UIViewController, UITableViewDelegate {
+class BusinessesViewController: UIViewController {
         
     @IBOutlet weak var tableView: UITableView!
     
@@ -69,7 +69,11 @@ class BusinessesViewController: UIViewController, UITableViewDelegate {
          }
          */
    
-        Business.searchWithTerm(term: "Thai", completion: {
+        Business.searchWithTerm(term: "Thai",
+                                sort: YelpSortMode.highestRated,
+                                categories: nil,
+                                deals: nil,
+                                completion: {
             (businesses: [Business]?, error: Error?) -> Void in
             
             self.businesses = businesses
@@ -91,17 +95,22 @@ class BusinessesViewController: UIViewController, UITableViewDelegate {
         
         print("Loading more data...")
         
-        Business.searchWithTerm(term: "Restaurants", limit:20, offset: 20, sort: nil, categories: nil, deals: nil) { (businesses: [Business]!, error: Error!) in
-            self.businesses = businesses
+        Business.searchWithTerm(term: "Restaurants",
+                                limit:20,
+                                offset: 20,
+                                sort: nil,
+                                categories: nil,
+                                deals: nil) { (businesses: [Business]!, error: Error!) in
+                                    self.businesses = businesses
             
-            let count = businesses?.count ?? 0
-            print("Filtered result count \(count)")
+                                    let count = businesses?.count ?? 0
+                                    print("Filtered result count \(count)")
             
-            // Stop the loading indicator
-            self.loadingMoreView!.stopAnimating()
+                                    // Stop the loading indicator
+                                    self.loadingMoreView!.stopAnimating()
             
-            // Reload the table view
-            self.tableView.reloadData()
+                                    // Reload the table view
+                                    self.tableView.reloadData()
         }
     }
     
@@ -125,17 +134,20 @@ class BusinessesViewController: UIViewController, UITableViewDelegate {
 extension BusinessesViewController: FiltersViewControllerDelegate {
     // filters view controller delegate methods
     
-    func filtersViewController(filtersViewController: FiltersViewController, didUpdateFilters filters: [String : Any]) {
+    func filtersViewController(_ filtersViewController: FiltersViewController, didUpdateFilters filters: [String : Any]) {
         
         let categories = filters["categories"] as?  [String]
         
-        Business.searchWithTerm(term: "Restaurants", sort: nil, categories: categories, deals: nil) { (businesses: [Business]!, error: Error!) in
-            self.businesses = businesses
+        Business.searchWithTerm(term: "Restaurants",
+                                sort: nil,
+                                categories: categories,
+                                deals: nil) { (businesses: [Business]!, error: Error!) in
+                                    self.businesses = businesses
             
-            let count = businesses?.count ?? 0
-            print("Filtered result count \(count)")
+                                    let count = businesses?.count ?? 0
+                                    print("Filtered result count \(count)")
             
-            self.tableView.reloadData()
+                                    self.tableView.reloadData()
         }
         
         //        Business.searchWithTerm(term: "Restaurants") { (businesses: [Business]!, error: Error!) in
@@ -143,6 +155,11 @@ extension BusinessesViewController: FiltersViewControllerDelegate {
         //            self.tableView.reloadData()
         //        }
     }
+    
+}
+
+// MARK: - UITableViewDelegate
+extension BusinessesViewController: UITableViewDelegate {
     
 }
 
