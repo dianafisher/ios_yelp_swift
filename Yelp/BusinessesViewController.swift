@@ -14,6 +14,7 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
     
     @IBOutlet weak var tableView: UITableView!
     
+    var searchBar: UISearchBar!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,26 +22,25 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
         tableView.delegate = self
         tableView.dataSource = self
         
-        // set the rowHeight to UITableViewAutomaticDimension to get the self-sizing behavior we want for the cell.
+        // Set the rowHeight to UITableViewAutomaticDimension to get the self-sizing behavior we want for the cell.
         tableView.rowHeight = UITableViewAutomaticDimension
+        
         // set estimatedRowHeight to improve performance of loading the tableView
         tableView.estimatedRowHeight = 120
         
-        Business.searchWithTerm(term: "Thai", completion: { (businesses: [Business]?, error: Error?) -> Void in
-            
-            self.businesses = businesses
-            self.tableView.reloadData()
-            
-            if let businesses = businesses {
-                for business in businesses {
-                    print(business.name!)
-                    print(business.address!)
-                }
-            }
-            
-            }
-        )
+        // Initialize the UISearchBar
+        searchBar = UISearchBar()
+        searchBar.delegate = self
         
+        // Add the UISearchBar to the NavigationBar
+        searchBar.sizeToFit()
+        navigationItem.titleView = searchBar
+        
+        // Perform the first search upon load
+        doSearch()
+    }
+    
+    fileprivate func doSearch() {
         /* Example of Yelp search with more search options specified
          Business.searchWithTerm("Restaurants", sort: .Distance, categories: ["asianfusion", "burgers"], deals: true) { (businesses: [Business]!, error: NSError!) -> Void in
          self.businesses = businesses
@@ -51,7 +51,20 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
          }
          }
          */
-        
+   
+        Business.searchWithTerm(term: "Thai", completion: {
+            (businesses: [Business]?, error: Error?) -> Void in
+            
+            self.businesses = businesses
+            self.tableView.reloadData()
+            
+            if let businesses = businesses {
+                for business in businesses {
+                    print(business.name!)
+                    print(business.address!)
+                }
+            }
+        })
     }
     
     override func didReceiveMemoryWarning() {
@@ -102,4 +115,28 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
         filtersViewController.delegate = self
     }
     
+}
+
+// SearchBar methods
+extension BusinessesViewController: UISearchBarDelegate {
+    
+    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        searchBar.setShowsCancelButton(true, animated: true)
+        return true
+    }
+    
+    func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
+        searchBar.setShowsCancelButton(false, animated: true)
+        return true
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = ""
+        searchBar.resignFirstResponder()
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+        doSearch()
+    }
 }

@@ -20,12 +20,6 @@ class Business: NSObject {
     init(dictionary: NSDictionary) {
         name = dictionary["name"] as? String
         
-        // TEMP - add additional text to name to make it wrap
-        if name != nil {
-            name! += " And some"
-        }
-        
-        
         let imageURLString = dictionary["image_url"] as? String
         if imageURLString != nil {
             imageURL = URL(string: imageURLString!)!
@@ -49,9 +43,6 @@ class Business: NSObject {
                 address += neighborhoods![0] as! String
             }
         }
-        
-        // TEMP - add additional text to name to make it wrap
-        address += " And some more text so this wraps"
         
         
         self.address = address
