@@ -8,13 +8,15 @@
 
 import UIKit
 
-class BusinessesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, FiltersViewControllerDelegate {
-    
-    var businesses: [Business]!
-    
+class BusinessesViewController: UIViewController, UITableViewDelegate {
+        
     @IBOutlet weak var tableView: UITableView!
     
     var searchBar: UISearchBar!
+    var loadingMoreView: InfiniteScrollActivityView?
+    
+    var businesses: [Business]!
+    var isMoreDataLoading = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,6 +37,21 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
         // Add the UISearchBar to the NavigationBar
         searchBar.sizeToFit()
         navigationItem.titleView = searchBar
+        
+        // Set up the InfiniteScrollActivityView loading indicator
+        let loadingViewFrame = CGRect(x: 0,
+                                      y: tableView.contentSize.height,
+                                      width: tableView.bounds.size.width,
+                                      height: InfiniteScrollActivityView.defaultHeight)
+        
+        loadingMoreView = InfiniteScrollActivityView(frame: loadingViewFrame)
+        loadingMoreView!.isHidden = true
+        tableView.addSubview(loadingMoreView!)
+        
+        // Adjust the table view insets to make room for the activity view
+        var insets = tableView.contentInset
+        insets.bottom += InfiniteScrollActivityView.defaultHeight
+        tableView.contentInset = insets
         
         // Perform the first search upon load
         doSearch()
@@ -58,6 +75,9 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
             self.businesses = businesses
             self.tableView.reloadData()
             
+            let count = businesses?.count ?? 0
+            print("Result count \(count)")
+            
             if let businesses = businesses {
                 for business in businesses {
                     print(business.name!)
@@ -67,10 +87,43 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
         })
     }
     
+    fileprivate func loadMoreData() {
+        
+        print("Loading more data...")
+        
+        Business.searchWithTerm(term: "Restaurants", limit:20, offset: 20, sort: nil, categories: nil, deals: nil) { (businesses: [Business]!, error: Error!) in
+            self.businesses = businesses
+            
+            let count = businesses?.count ?? 0
+            print("Filtered result count \(count)")
+            
+            // Stop the loading indicator
+            self.loadingMoreView!.stopAnimating()
+            
+            // Reload the table view
+            self.tableView.reloadData()
+        }
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    
+     // MARK: - Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let navigationController = segue.destination as! UINavigationController
+        
+        let filtersViewController = navigationController.topViewController as! FiltersViewController
+        filtersViewController.delegate = self
+    }
+    
+}
+
+// MARK: - FiltersViewControllerDelegate
+extension BusinessesViewController: FiltersViewControllerDelegate {
+    // filters view controller delegate methods
     
     func filtersViewController(filtersViewController: FiltersViewController, didUpdateFilters filters: [String : Any]) {
         
@@ -78,17 +131,25 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
         
         Business.searchWithTerm(term: "Restaurants", sort: nil, categories: categories, deals: nil) { (businesses: [Business]!, error: Error!) in
             self.businesses = businesses
+            
+            let count = businesses?.count ?? 0
+            print("Filtered result count \(count)")
+            
             self.tableView.reloadData()
         }
         
-//        Business.searchWithTerm(term: "Restaurants") { (businesses: [Business]!, error: Error!) in
-//            self.businesses =  businesses
-//            self.tableView.reloadData()
-//        }
+        //        Business.searchWithTerm(term: "Restaurants") { (businesses: [Business]!, error: Error!) in
+        //            self.businesses =  businesses
+        //            self.tableView.reloadData()
+        //        }
     }
     
+}
+
+// MARK: - UITableViewDataSource
+extension BusinessesViewController: UITableViewDataSource {
+    // table view data source methods
     
-    // MARK: - UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if businesses != nil {
             return businesses.count
@@ -105,20 +166,46 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
         return cell
     }
     
-    
-    
-     // MARK: - Navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let navigationController = segue.destination as! UINavigationController
-        
-        let filtersViewController = navigationController.topViewController as! FiltersViewController
-        filtersViewController.delegate = self
-    }
-    
 }
 
-// SearchBar methods
+// MARK: - UIScrollViewDelegate
+extension BusinessesViewController: UIScrollViewDelegate {
+    // scroll view delegate methods
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        // Handle scroll behavior
+        
+        if (!isMoreDataLoading) {
+            // Calculate the position of one screen length before the bottom of the results
+            let scrollViewContentHeight = tableView.contentSize.height
+            let scrollOffsetThreshold = scrollViewContentHeight - tableView.bounds.size.height
+            
+            // When the user has scrolled beyond the threshold, request more data
+            if (scrollView.contentOffset.y > scrollOffsetThreshold && tableView.isDragging) {
+                isMoreDataLoading = true
+                
+                // Update position of loading indicator
+                let frame = CGRect(x: 0,
+                                   y: tableView.contentSize.height,
+                                   width: tableView.bounds.size.width,
+                                   height: InfiniteScrollActivityView.defaultHeight)
+                
+                loadingMoreView?.frame = frame
+                
+                // Start loading indicator
+                loadingMoreView!.startAnimating()
+                
+                // Request more data
+                self.loadMoreData()
+            }
+            
+        }
+    }
+}
+
+// MARK: - UISearchBarDelegate
 extension BusinessesViewController: UISearchBarDelegate {
+    // search bar delegate methods
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
         searchBar.setShowsCancelButton(true, animated: true)
