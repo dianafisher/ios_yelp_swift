@@ -4,7 +4,7 @@ Time spent: 20 hours spent in total
 
 ## Completed user stories:
 
-* [ ] Required: Table rows should be dynamic height according to the content height.
+* [x] Required: Table rows should be dynamic height according to the content height.
 * [x] Required: Custom cells should have the proper Auto Layout constraints. 
 * [x] Required: Search bar should be in the navigation bar.
 * [ ] Required: Filter by category, sort (best match, distance, highest rated), distance, deals (on/off).
@@ -13,7 +13,7 @@ Time spent: 20 hours spent in total
 * [ ] Optional: Infinite scroll for restaurant results.
 * [ ] Optional: Implement map view of restaurant results.
 * [ ] Optional: Implement a custom switch.
-* [ ] Optional: Distance filter should expand as in the real Yelp app.
+* [x] Optional: Distance filter should expand as in the real Yelp app.
 * [ ] Optional: Categories should show a subset of the full list with a "See All" row to expand.
 * [ ] Optional: Implement the restaurant detail page.
 

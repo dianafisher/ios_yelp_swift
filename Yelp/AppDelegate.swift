@@ -15,12 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        
-        // Set the appearance of the UINavigationBar
-        let backgroundImage = UIImage(named: "navbar")
-        UINavigationBar.appearance().setBackgroundImage(backgroundImage, for: .default)
-        UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
-        
+                
         return true
     }
 
