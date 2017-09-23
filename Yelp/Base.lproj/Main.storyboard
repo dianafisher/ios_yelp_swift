@@ -212,7 +212,7 @@
                                             <constraints>
                                                 <constraint firstAttribute="trailing" secondItem="SK9-gZ-kqz" secondAttribute="trailing" constant="21" id="3zB-C1-Jwc"/>
                                                 <constraint firstItem="SK9-gZ-kqz" firstAttribute="centerY" secondItem="rpj-aJ-Jgu" secondAttribute="centerY" id="hQX-us-mCZ"/>
-                                                <constraint firstItem="SK9-gZ-kqz" firstAttribute="leading" secondItem="hqU-yw-pJf" secondAttribute="trailing" constant="259" id="wb9-tU-g6O"/>
+                                                <constraint firstItem="SK9-gZ-kqz" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="hqU-yw-pJf" secondAttribute="trailing" constant="16" id="wb9-tU-g6O"/>
                                                 <constraint firstItem="hqU-yw-pJf" firstAttribute="leading" secondItem="rpj-aJ-Jgu" secondAttribute="leading" constant="15" id="wnD-Sq-fHG"/>
                                                 <constraint firstItem="hqU-yw-pJf" firstAttribute="centerY" secondItem="rpj-aJ-Jgu" secondAttribute="centerY" id="wtY-XD-mSU"/>
                                             </constraints>

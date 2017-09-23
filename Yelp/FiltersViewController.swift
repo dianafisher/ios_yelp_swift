@@ -33,7 +33,6 @@ class FiltersViewController: UIViewController {
     var categories: [[String:String]]! // array of dictionaries
     var switchStates = [Int:Bool]()  // dictionary will hold row number: boolean
     
-    let sectionNames: [String] = ["", "Distance", "Sort By", "Category"]        
     var sectionsOpen = [Bool]()
     
     weak var delegate: FiltersViewControllerDelegate?
@@ -80,17 +79,6 @@ class FiltersViewController: UIViewController {
         delegate?.filtersViewController!(self, didUpdateFilters: filters)
     }
     
-    func yelpDistances() -> [String] {
-        return ["Auto", "0.3 miles", "1 mile", "5 miles", "20 miles"]
-    }
-    
-    func tableSections() -> [[String:String]] {
-        return [["name": "Deals"],
-                ["name": "Distance"],
-                ["name": "Sort By"],
-                ["name": "Category"]]
-    }
-    
 
     /*
     // MARK: - Navigation
@@ -130,32 +118,45 @@ extension FiltersViewController: UITableViewDataSource {
     // table view data source methods
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return sectionNames[section]
+        return YelpFilters.filterNames[section]
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return sectionNames.count
+        return YelpFilters.filterNames.count
     }
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if sectionsOpen[section] {
-            return 3
+            switch(section) {
+            case 0:
+                return 1
+            case 1:
+                return YelpFilters.distances.count
+            case 2:
+                return YelpFilters.sortByOptions.count
+            case 3:
+                return YelpFilters.categories.count
+            default: return 0
+            }
+            
         } else {
-            return 1
+            if section < 3 {
+                return 1
+            } else {
+                return 3
+            }
         }
-        
-//        return categories.count
+
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        print("indexPath \(indexPath)")
         
         let section = indexPath.section
         
         // Section 0 is Deals
         if section == 0 {
+            
             let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchCell", for: indexPath) as! SwitchCell
             
             cell.switchLabel.text = "Offering a Deal"
@@ -164,30 +165,63 @@ extension FiltersViewController: UITableViewDataSource {
             cell.onSwitch.isOn = switchStates[indexPath.row] ?? false  // nil-coalescing operator
             return cell
         }
-        
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchCell", for: indexPath) as! SwitchCell
-//        
-//        cell.switchLabel.text = categories[indexPath.row]["name"]
-//        cell.delegate = self
-//        
-//        cell.onSwitch.isOn = switchStates[indexPath.row] ?? false  // nil-coalescing operator
-        
+            
         // Section 1 is Distance
         else if section == 1 {
+            
             let cell = tableView.dequeueReusableCell(withIdentifier: "DropDownCell", for: indexPath) as! DropDownCell
-            cell.titleLabel.text = YelpFilters.filterNames[indexPath.row]
-            if indexPath.row > 0 {
-                cell.statusImageView.image = UIImage (named: "unselected")
+            
+            cell.titleLabel.text = YelpFilters.distances[indexPath.row]["name"]!
+            
+            if sectionsOpen[section] {
+                if indexPath.row == 0 {
+                    cell.statusImageView.image = UIImage (named: "round-done-button")
+                } else {
+                    cell.statusImageView.image = UIImage (named: "unselected")
+                }
+                
+            } else {
+                cell.statusImageView.image = UIImage (named: "drop-down-arrow")
             }
+            
+            
             return cell
         }
             
-        else {
+        // Section 2 is Sort By
+        else if section == 2 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "DropDownCell", for: indexPath) as! DropDownCell
-            cell.titleLabel.text = YelpFilters.filterNames[indexPath.row]
-            if indexPath.row > 0 {
-                cell.statusImageView.image = UIImage (named: "unselected")
+            
+            cell.titleLabel.text = YelpFilters.sortByOptions[indexPath.row]["name"]! as! String
+            
+            if sectionsOpen[section] {
+                if indexPath.row == 0 {
+                    cell.statusImageView.image = UIImage (named: "round-done-button")
+                } else {
+                    cell.statusImageView.image = UIImage (named: "unselected")
+                }
+            } else {
+                cell.statusImageView.image = UIImage (named: "drop-down-arrow")
             }
+
+            return cell
+        }
+            
+        // Last section is Categories
+        else {
+//            let cell = tableView.dequeueReusableCell(withIdentifier: "DropDownCell", for: indexPath) as! DropDownCell
+//            
+//            cell.titleLabel.text = categories[indexPath.row]["name"]!
+//            if indexPath.row > 0 {
+//                cell.statusImageView.image = UIImage (named: "unselected")
+//            }
+//            return cell
+            
+            let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchCell", for: indexPath) as! SwitchCell
+            cell.switchLabel.text = categories[indexPath.row]["name"]
+            cell.delegate = self
+            cell.onSwitch.isOn = switchStates[indexPath.row] ?? false
+            
             return cell
         }
         

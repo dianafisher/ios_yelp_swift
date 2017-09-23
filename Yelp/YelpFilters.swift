@@ -15,13 +15,17 @@ enum YelpFilter: Int {
 struct YelpFilters {
     
     static let filterNames = ["Deals", "Distance", "Sort By", "Category"]
-    static let distances = ["Auto", "0.3 miles", "1 mile", "5 miles", "20 miles"]
-    static let radius = [["name": "Auto", "meters": "0"],
+
+    static let distances = [["name": "Auto", "meters": "0"],
                          ["name": "0.3 miles", "meters": "482"],
                          ["name": "1 mile", "meters": "1600"],
                          ["name": "5 miles", "meters": "8046"],
                          ["name": "20 miles", "meters": "32187"]]
-    static let sortByOptions = ["Best Match", "Distance", "Highest Rated"]
+
+    static let sortByOptions = [["name": "Best Match", "code": YelpSortMode.bestMatched],
+                                ["name": "Distance", "code": YelpSortMode.distance],
+                                ["name": "Highest Rated", "code": YelpSortMode.highestRated]]
+    
     static let categories = [["name" : "Afghan", "code": "afghani"],
                       ["name" : "African", "code": "african"],
                       ["name" : "American, New", "code": "newamerican"],
@@ -196,15 +200,17 @@ struct YelpFilters {
         
     }
     
-    func options(forYelpFilter filter: YelpFilter) -> [String] {
-        switch filter {
-        
-        case YelpFilter.distance:
-            return YelpFilters.distances
-        case YelpFilter.sortBy:
-            return YelpFilters.sortByOptions
-        default:
-            return []
-        }
-    }
+//    func options(forYelpFilter filter: YelpFilter) -> [[String: Any]] {
+//        switch filter {
+//        
+//        case YelpFilter.distance:
+//            return YelpFilters.distances
+//        case YelpFilter.sortBy:
+//            return YelpFilters.sortByOptions
+//        case YelpFilter.category:
+//            return YelpFilters.categories
+//        default:
+//            return []
+//        }
+//    }
 }
