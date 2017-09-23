@@ -75,8 +75,14 @@ class BusinessesViewController: UIViewController {
                                     (businesses: [Business]?, error: Error?) -> Void in
                                     
                                     self.businesses = businesses
-                                    self.tableView.reloadData()
-                                    
+            
+            
+                                    // Update UI on the main thread
+                                    DispatchQueue.main.async(execute: {
+                                        self.loadingMoreView?.stopAnimating()
+                                        self.tableView.reloadData()
+                                    })
+            
                                     let count = businesses?.count ?? 0
                                     print("Result count \(count)")
                                     
