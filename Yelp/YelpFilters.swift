@@ -8,10 +8,6 @@
 
 import Foundation
 
-enum YelpFilter: Int {
-    case deals = 0, distance, sortBy, category
-}
-
 struct YelpFilters {
     
     static let filterNames = ["Deals", "Distance", "Sort By", "Category"]

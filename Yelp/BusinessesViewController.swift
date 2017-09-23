@@ -137,11 +137,12 @@ extension BusinessesViewController: FiltersViewControllerDelegate {
     func filtersViewController(_ filtersViewController: FiltersViewController, didUpdateFilters filters: [String : Any]) {
         
         let categories = filters["categories"] as?  [String]
+        let deals = filters["deals"] as? Bool
         
         Business.searchWithTerm(term: "Restaurants",
                                 sort: nil,
                                 categories: categories,
-                                deals: nil) { (businesses: [Business]!, error: Error!) in
+                                deals: deals) { (businesses: [Business]!, error: Error!) in
                                     self.businesses = businesses
             
                                     let count = businesses?.count ?? 0

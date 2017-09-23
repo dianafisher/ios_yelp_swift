@@ -30,17 +30,15 @@ class FiltersViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
     
-    var categories: [[String:String]]! // array of dictionaries
-    var switchStates = [Int:Bool]()  // dictionary will hold row number: boolean
+    var categorySwitchStates = [Int:Bool]()  // dictionary will hold row number: boolean
     
     var sectionsOpen = [Bool]()
+    var dealsSwitchIsOn: Bool = false
     
     weak var delegate: FiltersViewControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        categories = YelpFilters.categories
         
         sectionsOpen = [false, false, false, false]
         
@@ -65,16 +63,19 @@ class FiltersViewController: UIViewController {
         
         var selectedCategories = [String]()
         
-        for (row,isOn) in switchStates {
+        for (row,isOn) in categorySwitchStates {
             if isOn {
                 // add the filter to an array of categories
-                selectedCategories.append(categories[row]["code"]!)
+                selectedCategories.append(YelpFilters.categories[row]["code"]!)
             }
         }
         
         if selectedCategories.count > 0 {
             filters["categories"] = selectedCategories
         }
+        
+        // check if deals switch is on
+        filters["deals"] = dealsSwitchIsOn
         
         delegate?.filtersViewController!(self, didUpdateFilters: filters)
     }
@@ -162,7 +163,7 @@ extension FiltersViewController: UITableViewDataSource {
             cell.switchLabel.text = "Offering a Deal"
             cell.delegate = self
             
-            cell.onSwitch.isOn = switchStates[indexPath.row] ?? false  // nil-coalescing operator
+            cell.onSwitch.isOn = categorySwitchStates[indexPath.row] ?? false  // nil-coalescing operator
             return cell
         }
             
@@ -218,9 +219,9 @@ extension FiltersViewController: UITableViewDataSource {
 //            return cell
             
             let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchCell", for: indexPath) as! SwitchCell
-            cell.switchLabel.text = categories[indexPath.row]["name"]
+            cell.switchLabel.text = YelpFilters.categories[indexPath.row]["name"]
             cell.delegate = self
-            cell.onSwitch.isOn = switchStates[indexPath.row] ?? false
+            cell.onSwitch.isOn = categorySwitchStates[indexPath.row] ?? false
             
             return cell
         }
@@ -233,9 +234,16 @@ extension FiltersViewController: SwitchCellDelegate {
     func switchCell(switchCell: SwitchCell, didChangeValue value: Bool) {
         let indexPath = tableView.indexPath(for: switchCell)
         
-        // store the switch state in our switchStates dictionary
-        switchStates[(indexPath?.row)!] = value
+        let section = indexPath?.section
         
-        print("FiltersViewController got the switch event")
+        if section == YelpFilter.deals.rawValue {
+            dealsSwitchIsOn = value
+        }
+        
+        if section == YelpFilter.category.rawValue {
+            // store the switch state in our switchStates dictionary
+            categorySwitchStates[(indexPath?.row)!] = value            
+        }
+        
     }
 }
