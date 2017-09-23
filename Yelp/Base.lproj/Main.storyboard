@@ -129,7 +129,8 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Yelp" id="H0F-e8-qg8">
-                        <barButtonItem key="leftBarButtonItem" title="Filters" id="bw1-6J-9aI">
+                        <barButtonItem key="leftBarButtonItem" title="Filter" id="bw1-6J-9aI">
+                            <color key="tintColor" white="0.96999999999999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
                                 <segue destination="G09-9Z-pVP" kind="presentation" id="Fdj-Nl-67b"/>
                             </connections>
@@ -143,7 +144,7 @@
             </objects>
             <point key="canvasLocation" x="2407" y="364"/>
         </scene>
-        <!--Filters-->
+        <!--Filter-->
         <scene sceneID="fly-a2-bXe">
             <objects>
                 <viewController id="NaN-bg-S92" customClass="FiltersViewController" customModule="Yelp" customModuleProvider="target" sceneMemberID="viewController">
@@ -233,13 +234,15 @@
                             <constraint firstItem="HMj-Qe-Xgx" firstAttribute="top" secondItem="JRX-eA-cfN" secondAttribute="bottom" id="tDO-HM-t4k"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Filters" id="ETm-r0-NAx">
+                    <navigationItem key="navigationItem" title="Filter" id="ETm-r0-NAx">
                         <barButtonItem key="leftBarButtonItem" title="Cancel" id="MZi-bi-Mrw">
+                            <color key="tintColor" white="0.96999999999999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
                                 <action selector="onCancelPressed:" destination="NaN-bg-S92" id="ZdF-7l-uve"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Search" id="x1D-zA-4ig">
+                            <color key="tintColor" white="0.96999999999999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
                                 <action selector="onSearchPressed:" destination="NaN-bg-S92" id="LjL-M9-J51"/>
                             </connections>
@@ -258,7 +261,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="d6S-Of-UUU" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="YWi-YM-8CH">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="YWi-YM-8CH">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

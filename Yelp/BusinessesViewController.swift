@@ -34,6 +34,13 @@ class BusinessesViewController: UIViewController {
         
         // Initialize the UISearchBar
         searchBar = UISearchBar()
+        
+        // Configure the appearance of the UISearchBar
+        searchBar.text = "Restaurants"
+        searchBar.tintColor = UIColor.white
+        if #available(iOS 9.0, *) {
+            UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).textColor = UIColor.gray
+        }
         searchBar.delegate = self
         
         // Add the UISearchBar to the NavigationBar
