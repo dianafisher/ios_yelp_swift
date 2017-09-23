@@ -10,6 +10,8 @@ import UIKit
 
 @objc protocol FiltersViewControllerDelegate {
     @objc optional func filtersViewController(_ filtersViewController: FiltersViewController, didUpdateFilters filters:[String:Any])
+    
+    @objc optional func filtersViewController(_ filtersViewController: FiltersViewController, didUpdateSearchSettings: YelpSearchSettings)
 }
 
 class FiltersViewController: UIViewController {
@@ -18,7 +20,9 @@ class FiltersViewController: UIViewController {
     
     fileprivate var categorySwitchStates = [Int:Bool]()
     fileprivate var sectionsOpen = [Bool]()
-    fileprivate var dealsSwitchIsOn: Bool = false        
+    fileprivate var dealsSwitchIsOn: Bool = false
+    
+    var searchSettings: YelpSearchSettings?
     
     weak var delegate: FiltersViewControllerDelegate?
     
@@ -29,6 +33,9 @@ class FiltersViewController: UIViewController {
         
         tableView.delegate = self
         tableView.dataSource = self
+        
+        dealsSwitchIsOn = (searchSettings?.dealsOn)!
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -51,7 +58,7 @@ class FiltersViewController: UIViewController {
         for (row,isOn) in categorySwitchStates {
             if isOn {
                 // add the filter to an array of categories
-                selectedCategories.append(YelpSearchSettings.categories[row]["code"]!)
+                selectedCategories.append(Categories[row].code)
             }
         }
         
@@ -118,11 +125,11 @@ extension FiltersViewController: UITableViewDataSource {
             case 0:
                 return 1
             case 1:
-                return YelpSearchSettings.distances.count
+                return Distances.count
             case 2:
                 return YelpSearchSettings.sortByOptions.count
             case 3:
-                return YelpSearchSettings.categories.count
+                return Categories.count
             default: return 0
             }
             
@@ -133,7 +140,7 @@ extension FiltersViewController: UITableViewDataSource {
                 return 3
             }
         }
-
+        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -157,7 +164,7 @@ extension FiltersViewController: UITableViewDataSource {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: "DropDownCell", for: indexPath) as! DropDownCell
             
-            cell.titleLabel.text = YelpSearchSettings.distances[indexPath.row]["name"]!
+            cell.titleLabel.text = Distances[indexPath.row].name
             
             if sectionsOpen[section] {
                 if indexPath.row == 0 {
@@ -206,7 +213,7 @@ extension FiltersViewController: UITableViewDataSource {
 //            return cell
             
             let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchCell", for: indexPath) as! SwitchCell
-            cell.switchLabel.text = YelpSearchSettings.categories[indexPath.row]["name"]
+            cell.switchLabel.text = Categories[indexPath.row].name
             cell.delegate = self
             cell.onSwitch.isOn = categorySwitchStates[indexPath.row] ?? false
             
