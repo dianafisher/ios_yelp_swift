@@ -1,34 +1,50 @@
 ### Basic Yelp client
 
-This is a headless example of how to implement an OAuth 1.0a Yelp API client. The Yelp API provides an application token that allows applications to make unauthenticated requests to their search API.
+Time spent: 20 hours spent in total
 
-### Next steps
+## Completed user stories:
 
-- Check out `BusinessesViewController.swift` to see how to use the `Business` model.
+* [ ] Required: Table rows should be dynamic height according to the content height.
+* [x] Required: Custom cells should have the proper Auto Layout constraints. 
+* [x] Required: Search bar should be in the navigation bar.
+* [ ] Required: Filter by category, sort (best match, distance, highest rated), distance, deals (on/off).
+* [x] Required: The filters table should be organized into sections as in the mock.
+* [x] Required: Clicking on the "Search" button should dismiss the filters page and trigger the search w/ the new filter settings.
+* [ ] Optional: Infinite scroll for restaurant results.
+* [ ] Optional: Implement map view of restaurant results.
+* [ ] Optional: Implement a custom switch.
+* [ ] Optional: Distance filter should expand as in the real Yelp app.
+* [ ] Optional: Categories should show a subset of the full list with a "See All" row to expand.
+* [ ] Optional: Implement the restaurant detail page.
 
-### Sample request
+* [ ] Additional: 
 
-**Basic search with query**
+## Walkthrough of all user stories:
 
-```
-Business.searchWithTerm("Thai", completion: { (businesses: [Business]!, error: NSError!) -> Void in
-    self.businesses = businesses
-    
-    for business in businesses {
-        print(business.name!)
-        print(business.address!)
-    }
-})
-```
+<img src='' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
-**Advanced search with categories, sort, and deal filters**
+GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
-```
-Business.searchWithTerm("Restaurants", sort: .Distance, categories: ["asianfusion", "burgers"], deals: true) { (businesses: [Business]!, error: NSError!) -> Void in
+## License
 
-    for business in businesses {
-        print(business.name!)
-        print(business.address!)
-    }
-}
-```
+MIT License
+
+Copyright (c) 2017 Diana Fisher
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
