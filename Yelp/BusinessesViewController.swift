@@ -8,6 +8,8 @@
 
 import UIKit
 
+private let businessCellReuseIdentifier = "BusinessCell"
+
 class BusinessesViewController: UIViewController {
         
     @IBOutlet weak var tableView: UITableView!
@@ -32,14 +34,16 @@ class BusinessesViewController: UIViewController {
         // set estimatedRowHeight to improve performance of loading the tableView
         tableView.estimatedRowHeight = 120
         
+        navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.8288504481, green: 0.1372715533, blue: 0.1384659708, alpha: 1)
+        
         // Initialize the UISearchBar
         searchBar = UISearchBar()
         searchBar.delegate = self
         searchBar.text = "Restaurants"
-        searchBar.tintColor = UIColor.white
+        searchBar.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         
         if #available(iOS 9.0, *) {
-            UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).textColor = UIColor.gray
+            UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
         }
                 
         // Add the UISearchBar to the NavigationBar
@@ -174,7 +178,7 @@ extension BusinessesViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "BusinessCell", for: indexPath) as! BusinessCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: businessCellReuseIdentifier, for: indexPath) as! BusinessCell
         
         cell.business = businesses[indexPath.row]
         

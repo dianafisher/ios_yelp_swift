@@ -11,8 +11,15 @@ import UIKit
 @objc protocol FiltersViewControllerDelegate {
     @objc optional func filtersViewController(_ filtersViewController: FiltersViewController, didUpdateFilters filters:[String:Any])
     
-    @objc optional func filtersViewController(_ filtersViewController: FiltersViewController, didUpdateSearchSettings: YelpSearchSettings)
+//    @objc optional func filtersViewController(_ filtersViewController: FiltersViewController, didUpdateSearchSettings: YelpSearchSettings)
 }
+
+enum YelpFilter: Int {
+    case deals = 0, distance, sortBy, category
+}
+
+private let switchCellReuseIdentifier = "SwitchCell"
+private let dropDownCellReuseIdentifier = "DropDownCell"
 
 class FiltersViewController: UIViewController {
 
@@ -36,6 +43,9 @@ class FiltersViewController: UIViewController {
         
         dealsSwitchIsOn = (searchSettings?.dealsOn)!
         
+        // Set navigationBar tint colors
+        navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.8288504481, green: 0.1372715533, blue: 0.1384659708, alpha: 1)
+        navigationController?.navigationBar.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
     }
 
     override func didReceiveMemoryWarning() {
@@ -127,7 +137,7 @@ extension FiltersViewController: UITableViewDataSource {
             case 1:
                 return Distances.count
             case 2:
-                return YelpSearchSettings.sortByOptions.count
+                return SortModes.count
             case 3:
                 return Categories.count
             default: return 0
@@ -150,7 +160,7 @@ extension FiltersViewController: UITableViewDataSource {
         // Section 0 is Deals
         if section == 0 {
             
-            let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchCell", for: indexPath) as! SwitchCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: switchCellReuseIdentifier, for: indexPath) as! SwitchCell
             
             cell.switchLabel.text = "Offering a Deal"
             cell.delegate = self
@@ -162,7 +172,7 @@ extension FiltersViewController: UITableViewDataSource {
         // Section 1 is Distance
         else if section == 1 {
             
-            let cell = tableView.dequeueReusableCell(withIdentifier: "DropDownCell", for: indexPath) as! DropDownCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: dropDownCellReuseIdentifier, for: indexPath) as! DropDownCell
             
             cell.titleLabel.text = Distances[indexPath.row].name
             
@@ -183,11 +193,9 @@ extension FiltersViewController: UITableViewDataSource {
             
         // Section 2 is Sort By
         else if section == 2 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "DropDownCell", for: indexPath) as! DropDownCell
-            
-            print(YelpSearchSettings.sortByOptions[indexPath.row]["name"]!)
-            let text: String = YelpSearchSettings.sortByOptions[indexPath.row]["name"]! as! String
-            cell.titleLabel.text = text
+            let cell = tableView.dequeueReusableCell(withIdentifier: dropDownCellReuseIdentifier, for: indexPath) as! DropDownCell
+                        
+            cell.titleLabel.text = SortModes[indexPath.row].name
             
             if sectionsOpen[section] {
                 if indexPath.row == 0 {
@@ -212,7 +220,7 @@ extension FiltersViewController: UITableViewDataSource {
 //            }
 //            return cell
             
-            let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchCell", for: indexPath) as! SwitchCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: switchCellReuseIdentifier, for: indexPath) as! SwitchCell
             cell.switchLabel.text = Categories[indexPath.row].name
             cell.delegate = self
             cell.onSwitch.isOn = categorySwitchStates[indexPath.row] ?? false

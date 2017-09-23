@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+import MapKit
 
 class YelpSearchSettings: NSObject {
     
@@ -15,18 +15,20 @@ class YelpSearchSettings: NSObject {
     var offset: Int
     var limit: Int
     var distance: Distance
-    var sortOption: Int
+    var sortMode: SortMode
     var categories: [Category]?
     var dealsOn: Bool
+    var location: CLLocation
     
     override init() {
         searchTerm = "Thai"
         offset = 0
         limit = 20
-        sortOption = YelpSortMode.distance.rawValue
+        sortMode = SortModes[0]
         dealsOn = false
         distance = Distances[0]
         categories = [Category]()
+        location = CLLocation(latitude: 37.785771, longitude: -122.406165)  // San Francisco
     }
     
     func parameters() -> [String : Any] {
@@ -34,7 +36,7 @@ class YelpSearchSettings: NSObject {
         // Default the location to San Francisco
         var parameters: [String : Any] = ["term": searchTerm as Any, "ll": "37.785771,-122.406165" as Any]
         
-        parameters["sort"] = sortOption as AnyObject?
+        parameters["sort"] = sortMode.code
         
         if categories != nil && categories!.count > 0 {
             
@@ -44,7 +46,9 @@ class YelpSearchSettings: NSObject {
 
         }
         
-        
+//        if categories != nil && categories!.count > 0 {
+//            parameters["category_filter"] = (categories!).joined(separator: ",") as AnyObject?
+//        }
         
         parameters["deals_filter"] = dealsOn as AnyObject?
         parameters["radius_filter"] = distance.inMeters()
@@ -56,8 +60,4 @@ class YelpSearchSettings: NSObject {
     
     static let filterNames = ["Deals", "Distance", "Sort By", "Category"]
     
-    static let sortByOptions = [["name": "Best Match", "code": YelpSortMode.bestMatched.rawValue],
-                                ["name": "Distance", "code": YelpSortMode.distance.rawValue],
-                                ["name": "Highest Rated", "code": YelpSortMode.highestRated.rawValue]]
-        
 }
