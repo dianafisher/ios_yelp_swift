@@ -14,6 +14,8 @@ class BusinessesViewController: UIViewController {
     
     var searchBar: UISearchBar!
     var loadingMoreView: InfiniteScrollActivityView?
+        
+    var searchSettings = YelpSearchSettings()
     
     var businesses: [Business]!
     var isMoreDataLoading = false
@@ -68,50 +70,32 @@ class BusinessesViewController: UIViewController {
          }
          }
          */
-   
-        Business.searchWithTerm(term: "Thai",
-                                sort: YelpSortMode.highestRated,
-                                categories: nil,
-                                deals: nil,
-                                completion: {
-            (businesses: [Business]?, error: Error?) -> Void in
-            
-            self.businesses = businesses
-            self.tableView.reloadData()
-            
-            let count = businesses?.count ?? 0
-            print("Result count \(count)")
-            
-            if let businesses = businesses {
-                for business in businesses {
-                    print(business.name!)
-                    print(business.address!)
-                }
-            }
+        
+        Business.searchWithSettings(settings: searchSettings, completion: {
+                                    (businesses: [Business]?, error: Error?) -> Void in
+                                    
+                                    self.businesses = businesses
+                                    self.tableView.reloadData()
+                                    
+                                    let count = businesses?.count ?? 0
+                                    print("Result count \(count)")
+                                    
+                                    if let businesses = businesses {
+                                        for business in businesses {
+                                            print(business.name!)
+                                            print(business.address!)
+                                        }
+                                    }
         })
+
     }
     
     fileprivate func loadMoreData() {
         
         print("Loading more data...")
         
-        Business.searchWithTerm(term: "Restaurants",
-                                limit:20,
-                                offset: 20,
-                                sort: nil,
-                                categories: nil,
-                                deals: nil) { (businesses: [Business]!, error: Error!) in
-                                    self.businesses = businesses
-            
-                                    let count = businesses?.count ?? 0
-                                    print("Filtered result count \(count)")
-            
-                                    // Stop the loading indicator
-                                    self.loadingMoreView!.stopAnimating()
-            
-                                    // Reload the table view
-                                    self.tableView.reloadData()
-        }
+        searchSettings.offset += searchSettings.limit
+        doSearch()
     }
     
     override func didReceiveMemoryWarning() {

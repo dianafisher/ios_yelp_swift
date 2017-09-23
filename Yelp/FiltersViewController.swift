@@ -12,28 +12,13 @@ import UIKit
     @objc optional func filtersViewController(_ filtersViewController: FiltersViewController, didUpdateFilters filters:[String:Any])
 }
 
-/*
- TODO:
- 
- Filters:
-    Category
-    Sort (best match)
-    Sort (distance)
-    Sort (highest rated)
-    Distance
-    Deals
-
- Move categories helper to a new file
- */
-
 class FiltersViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
     
-    var categorySwitchStates = [Int:Bool]()  // dictionary will hold row number: boolean
-    
-    var sectionsOpen = [Bool]()
-    var dealsSwitchIsOn: Bool = false
+    fileprivate var categorySwitchStates = [Int:Bool]()
+    fileprivate var sectionsOpen = [Bool]()
+    fileprivate var dealsSwitchIsOn: Bool = false        
     
     weak var delegate: FiltersViewControllerDelegate?
     
@@ -66,7 +51,7 @@ class FiltersViewController: UIViewController {
         for (row,isOn) in categorySwitchStates {
             if isOn {
                 // add the filter to an array of categories
-                selectedCategories.append(YelpFilters.categories[row]["code"]!)
+                selectedCategories.append(YelpSearchSettings.categories[row]["code"]!)
             }
         }
         
@@ -119,11 +104,11 @@ extension FiltersViewController: UITableViewDataSource {
     // table view data source methods
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return YelpFilters.filterNames[section]
+        return YelpSearchSettings.filterNames[section]
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return YelpFilters.filterNames.count
+        return YelpSearchSettings.filterNames.count
     }
     
     
@@ -133,11 +118,11 @@ extension FiltersViewController: UITableViewDataSource {
             case 0:
                 return 1
             case 1:
-                return YelpFilters.distances.count
+                return YelpSearchSettings.distances.count
             case 2:
-                return YelpFilters.sortByOptions.count
+                return YelpSearchSettings.sortByOptions.count
             case 3:
-                return YelpFilters.categories.count
+                return YelpSearchSettings.categories.count
             default: return 0
             }
             
@@ -172,7 +157,7 @@ extension FiltersViewController: UITableViewDataSource {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: "DropDownCell", for: indexPath) as! DropDownCell
             
-            cell.titleLabel.text = YelpFilters.distances[indexPath.row]["name"]!
+            cell.titleLabel.text = YelpSearchSettings.distances[indexPath.row]["name"]!
             
             if sectionsOpen[section] {
                 if indexPath.row == 0 {
@@ -193,7 +178,9 @@ extension FiltersViewController: UITableViewDataSource {
         else if section == 2 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "DropDownCell", for: indexPath) as! DropDownCell
             
-            cell.titleLabel.text = YelpFilters.sortByOptions[indexPath.row]["name"]! as! String
+            print(YelpSearchSettings.sortByOptions[indexPath.row]["name"]!)
+            let text: String = YelpSearchSettings.sortByOptions[indexPath.row]["name"]! as! String
+            cell.titleLabel.text = text
             
             if sectionsOpen[section] {
                 if indexPath.row == 0 {
@@ -219,7 +206,7 @@ extension FiltersViewController: UITableViewDataSource {
 //            return cell
             
             let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchCell", for: indexPath) as! SwitchCell
-            cell.switchLabel.text = YelpFilters.categories[indexPath.row]["name"]
+            cell.switchLabel.text = YelpSearchSettings.categories[indexPath.row]["name"]
             cell.delegate = self
             cell.onSwitch.isOn = categorySwitchStates[indexPath.row] ?? false
             
