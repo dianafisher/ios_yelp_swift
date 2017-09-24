@@ -87,7 +87,6 @@ class YelpClient: BDBOAuth1RequestOperationManager {
         
         // Default the location to San Francisco
         let parameters =  settings.parameters()
-        print(parameters)
         
         return self.get("search", parameters: parameters,
                         success: { (operation: AFHTTPRequestOperation, response: Any) -> Void in

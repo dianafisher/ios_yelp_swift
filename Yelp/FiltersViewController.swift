@@ -11,7 +11,7 @@ import UIKit
 @objc protocol FiltersViewControllerDelegate {
     @objc optional func filtersViewController(_ filtersViewController: FiltersViewController, didUpdateFilters filters:[String:Any])
     
-//    @objc optional func filtersViewController(_ filtersViewController: FiltersViewController, didUpdateSearchSettings: YelpSearchSettings)
+    @objc optional func filtersViewController(_ filtersViewController: FiltersViewController, didUpdateSearchSettings searchSettings: YelpSearchSettings)
 }
 
 enum YelpFilter: Int {
@@ -82,6 +82,7 @@ class FiltersViewController: UIViewController {
         filters["deals"] = dealsSwitchIsOn
         
         delegate?.filtersViewController!(self, didUpdateFilters: filters)
+        delegate?.filtersViewController!(self, didUpdateSearchSettings: searchSettings!)
     }
     
     fileprivate func didSelectDistanceAt(_ indexPath: IndexPath) {
@@ -202,7 +203,7 @@ extension FiltersViewController: UITableViewDataSource {
         
         let section = indexPath.section
         
-        // Section 0 is Deals
+        // Deals
         if section == YelpFilter.deals.rawValue {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: switchCellReuseIdentifier, for: indexPath) as! SwitchCell
@@ -210,10 +211,11 @@ extension FiltersViewController: UITableViewDataSource {
             cell.switchLabel.text = "Offering a Deal"
             cell.delegate = self
             
-            cell.onSwitch.isOn = categorySwitchStates[indexPath.row] ?? false  // nil-coalescing operator
+            cell.onSwitch.isOn = categorySwitchStates[indexPath.row] ?? false
             return cell
         }
-                    
+
+        // Distance
         else if section == YelpFilter.distance.rawValue {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: dropDownCellReuseIdentifier, for: indexPath) as! DropDownCell
@@ -246,6 +248,7 @@ extension FiltersViewController: UITableViewDataSource {
             return cell
         }
             
+        // Sort Mode
         else if section == YelpFilter.sortBy.rawValue {
             let cell = tableView.dequeueReusableCell(withIdentifier: dropDownCellReuseIdentifier, for: indexPath) as! DropDownCell
 
@@ -275,8 +278,7 @@ extension FiltersViewController: UITableViewDataSource {
             return cell
         }
             
-        // Last section is Categories
-            
+        // Categories
         else {
 //            let cell = tableView.dequeueReusableCell(withIdentifier: "DropDownCell", for: indexPath) as! DropDownCell
 //            

@@ -13,6 +13,7 @@ private let businessCellReuseIdentifier = "BusinessCell"
 class BusinessesViewController: UIViewController {
         
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var networkErrorView: UIView!
     
     var searchBar: UISearchBar!
     var loadingMoreView: InfiniteScrollActivityView?
@@ -24,6 +25,9 @@ class BusinessesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Set the network error view hidden initially
+        networkErrorView.isHidden = true
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -69,39 +73,43 @@ class BusinessesViewController: UIViewController {
         doSearch()
     }
     
+    // MARK: - Search Network Call
     fileprivate func doSearch() {
-        /* Example of Yelp search with more search options specified
-         Business.searchWithTerm("Restaurants", sort: .Distance, categories: ["asianfusion", "burgers"], deals: true) { (businesses: [Business]!, error: NSError!) -> Void in
-         self.businesses = businesses
-         
-         for business in businesses {
-         print(business.name!)
-         print(business.address!)
-         }
-         }
-         */
         
-        Business.searchWithSettings(settings: searchSettings, completion: {
-                                    (businesses: [Business]?, error: Error?) -> Void in
-                                    
-                                    self.businesses = businesses
-            
-            
-                                    // Update UI on the main thread
-                                    DispatchQueue.main.async(execute: {
-                                        self.loadingMoreView?.stopAnimating()
-                                        self.tableView.reloadData()
-                                    })
-            
-                                    let count = businesses?.count ?? 0
-                                    print("Result count \(count)")
-                                    
-                                    if let businesses = businesses {
-                                        for business in businesses {
-                                            print(business.name!)
-                                            print(business.address!)
-                                        }
-                                    }
+        // Hide the network error view
+        self.networkErrorView.isHidden = true
+       
+        Business.searchWithSettings(
+            settings: searchSettings,
+            completion: {
+                (businesses: [Business]?, error: Error?) -> Void in
+                
+                self.businesses = businesses
+
+                // Update UI on the main thread
+                DispatchQueue.main.async(execute: {
+                    self.loadingMoreView?.stopAnimating()
+                    self.tableView.reloadData()
+                })
+
+                let count = businesses?.count ?? 0
+                print("Result count \(count)")
+                
+                if let businesses = businesses {
+                    for business in businesses {
+                        print(business.name!)
+                        print(business.address!)
+                    }
+                }
+                    
+                else if let error = error {
+                    print("Error: \(error)")
+                    DispatchQueue.main.async {
+                        // show the network error view
+                        self.networkErrorView.isHidden = false
+                    }
+                }
+
         })
 
     }
@@ -156,6 +164,11 @@ extension BusinessesViewController: FiltersViewControllerDelegate {
         //            self.businesses =  businesses
         //            self.tableView.reloadData()
         //        }
+    }
+    
+    func filtersViewController(_ filtersViewController: FiltersViewController, didUpdateSearchSettings searchSettings: YelpSearchSettings) {
+        self.searchSettings = searchSettings
+        doSearch()
     }
     
 }

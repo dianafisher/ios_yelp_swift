@@ -15,11 +15,11 @@ struct Distance {
     
     let milesPerMeter = 0.000621371
     
-    func inMeters() -> Double {
+    func metersString() -> String {
         guard let m = miles else {
-            return 0
+            return ""
         }
-        return m * milesPerMeter
+        return String(format: "%.2f mi", milesPerMeter * m)
     }
 }
 

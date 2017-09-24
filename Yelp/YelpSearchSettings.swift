@@ -55,11 +55,20 @@ class YelpSearchSettings: NSObject {
 //        }
         
         parameters["deals_filter"] = dealsOn as AnyObject?
-        parameters["radius_filter"] = distance.inMeters()
+        parameters["radius_filter"] = distance.metersString()
         parameters["limit"] = limit as AnyObject
         parameters["offset"] = offset as AnyObject
         
+        track("parameters \(parameters)")
+        
         return parameters
-    }        
+    }
+    
+    public func track(_ message: String, file: String = #file, function: String = #function, line: Int = #line ) {
+        
+        let filename = (file as NSString).lastPathComponent
+        print("🅿️\(function):\(filename):\(line) - \(message) ")
+        
+    }
     
 }
