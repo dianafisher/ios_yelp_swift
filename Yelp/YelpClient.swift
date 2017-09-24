@@ -83,9 +83,8 @@ class YelpClient: BDBOAuth1RequestOperationManager {
                         })!
     }
     
-    func searchWithSettings(_ settings: YelpSearchSettings, completion: @escaping ([Business]?, Error?) -> Void) -> AFHTTPRequestOperation {
+    func searchWithSettings(_ settings: YelpSearchSettings, completion: @escaping ([Business]?, Int?, Error?) -> Void) -> AFHTTPRequestOperation {
         
-        // Default the location to San Francisco
         let parameters =  settings.parameters()
         
         return self.get("search", parameters: parameters,
@@ -97,12 +96,12 @@ class YelpClient: BDBOAuth1RequestOperationManager {
                                 
                                 let dictionaries = response["businesses"] as? [NSDictionary]
                                 if dictionaries != nil {
-                                    completion(Business.businesses(array: dictionaries!), nil)
+                                    completion(Business.businesses(array: dictionaries!), total, nil)
                                 }
                             }
         },
                         failure: { (operation: AFHTTPRequestOperation?, error: Error) -> Void in
-                            completion(nil, error)
+                            completion(nil, 0, error)
         })!
 
         

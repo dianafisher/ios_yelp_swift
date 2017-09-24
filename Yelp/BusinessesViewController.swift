@@ -22,6 +22,7 @@ class BusinessesViewController: UIViewController {
     
     var businesses: [Business]!
     var isMoreDataLoading = false
+    var totalResultCount = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,7 +44,7 @@ class BusinessesViewController: UIViewController {
         // Initialize the UISearchBar
         searchBar = UISearchBar()
         searchBar.delegate = self
-        searchBar.text = "Restaurants"
+        searchBar.text = searchSettings.searchTerm
         searchBar.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         
         if #available(iOS 9.0, *) {
@@ -79,34 +80,32 @@ class BusinessesViewController: UIViewController {
         // Hide the network error view
         self.networkErrorView.isHidden = true
        
+        // Reset offset to 0
+        searchSettings.offset = 0
+        
         Business.searchWithSettings(
             settings: searchSettings,
-            completion: {
-                (businesses: [Business]?, error: Error?) -> Void in
-                
-                self.businesses = businesses
-
-                // Update UI on the main thread
-                DispatchQueue.main.async(execute: {
-                    self.loadingMoreView?.stopAnimating()
-                    self.tableView.reloadData()
-                })
-
-                let count = businesses?.count ?? 0
-                print("Result count \(count)")
+            completion: { [weak self] (businesses: [Business]?, total: Int?, error: Error?) -> Void in
                 
                 if let businesses = businesses {
-                    for business in businesses {
-                        print(business.name!)
-                        print(business.address!)
-                    }
-                }
+                    self?.businesses = businesses
                     
-                else if let error = error {
+                    // Update UI on the main thread
+                    DispatchQueue.main.async(execute: {
+                        self?.loadingMoreView?.stopAnimating()
+                        self?.tableView.reloadData()
+                    })
+                }
+                
+                if let total = total {
+                    self?.totalResultCount = total
+                }
+                
+                if let error = error {
                     print("Error: \(error)")
                     DispatchQueue.main.async {
                         // show the network error view
-                        self.networkErrorView.isHidden = false
+                        self?.networkErrorView.isHidden = false
                     }
                 }
 
@@ -116,10 +115,59 @@ class BusinessesViewController: UIViewController {
     
     fileprivate func loadMoreData() {
         
-        print("Loading more data...")
+        var offset = searchSettings.offset
+        let limit = searchSettings.limit
+        
+        offset = offset + limit
+        guard offset < totalResultCount else {
+            return
+        }
         
         searchSettings.offset += searchSettings.limit
-        doSearch()
+        
+        Business.searchWithSettings(
+            settings: searchSettings,
+            completion: { [weak self] (businesses: [Business]?, total: Int?, error: Error?) -> Void in
+                
+                // Apppend the results to our businesses array.
+                if let businesses = businesses {
+                    self?.businesses.append(contentsOf: businesses)
+                    
+                    // Update UI on the main thread
+                    DispatchQueue.main.async(execute: {
+                        self?.loadingMoreView?.stopAnimating()
+                        self?.tableView.reloadData()
+                    })
+                }
+                
+                if let total = total {
+                    self?.totalResultCount = total
+                }
+                
+                self?.isMoreDataLoading = false
+                
+                if let error = error {
+                    print("Error: \(error)")
+                    DispatchQueue.main.async {
+                        // show the network error view
+                        self?.networkErrorView.isHidden = false
+                    }
+                }
+                
+        })
+        
+    }
+    
+    func hasMoreData() -> Bool {
+        var offset = searchSettings.offset
+        let limit = searchSettings.limit
+        
+        offset = offset + limit
+        
+        print("current offset: \(offset)")
+        print("totalResultCount: \(totalResultCount)")
+        
+        return offset < totalResultCount
     }
     
     override func didReceiveMemoryWarning() {
@@ -142,30 +190,7 @@ class BusinessesViewController: UIViewController {
 // MARK: - FiltersViewControllerDelegate
 extension BusinessesViewController: FiltersViewControllerDelegate {
     // filters view controller delegate methods
-    
-    func filtersViewController(_ filtersViewController: FiltersViewController, didUpdateFilters filters: [String : Any]) {
         
-        let categories = filters["categories"] as?  [String]
-        let deals = filters["deals"] as? Bool
-        
-        Business.searchWithTerm(term: "Restaurants",
-                                sort: nil,
-                                categories: categories,
-                                deals: deals) { (businesses: [Business]!, error: Error!) in
-                                    self.businesses = businesses
-            
-                                    let count = businesses?.count ?? 0
-                                    print("Filtered result count \(count)")
-            
-                                    self.tableView.reloadData()
-        }
-        
-        //        Business.searchWithTerm(term: "Restaurants") { (businesses: [Business]!, error: Error!) in
-        //            self.businesses =  businesses
-        //            self.tableView.reloadData()
-        //        }
-    }
-    
     func filtersViewController(_ filtersViewController: FiltersViewController, didUpdateSearchSettings searchSettings: YelpSearchSettings) {
         self.searchSettings = searchSettings
         doSearch()
@@ -214,21 +239,25 @@ extension BusinessesViewController: UIScrollViewDelegate {
             
             // When the user has scrolled beyond the threshold, request more data
             if (scrollView.contentOffset.y > scrollOffsetThreshold && tableView.isDragging) {
-                isMoreDataLoading = true
                 
-                // Update position of loading indicator
-                let frame = CGRect(x: 0,
-                                   y: tableView.contentSize.height,
-                                   width: tableView.bounds.size.width,
-                                   height: InfiniteScrollActivityView.defaultHeight)
+                if hasMoreData() {
+                    isMoreDataLoading = true
+                    
+                    // Update position of loading indicator
+                    let frame = CGRect(x: 0,
+                                       y: tableView.contentSize.height,
+                                       width: tableView.bounds.size.width,
+                                       height: InfiniteScrollActivityView.defaultHeight)
+                    
+                    loadingMoreView?.frame = frame
+                    
+                    // Start loading indicator
+                    loadingMoreView!.startAnimating()
+                    
+                    // Request more data
+                    self.loadMoreData()
+                }
                 
-                loadingMoreView?.frame = frame
-                
-                // Start loading indicator
-                loadingMoreView!.startAnimating()
-                
-                // Request more data
-                self.loadMoreData()
             }
             
         }
@@ -240,6 +269,7 @@ extension BusinessesViewController: UISearchBarDelegate {
     // search bar delegate methods
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        searchBar.text = ""
         searchBar.setShowsCancelButton(true, animated: true)
         return true
     }
@@ -256,6 +286,9 @@ extension BusinessesViewController: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
+        let previousTerm = searchSettings.searchTerm
+        searchSettings.searchTerm = searchBar.text ?? previousTerm
         doSearch()
     }
+    
 }

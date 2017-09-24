@@ -21,7 +21,7 @@ class YelpSearchSettings: NSObject {
     var location: CLLocation
     
     override init() {
-        searchTerm = "Thai"
+        searchTerm = "Restaurants"
         offset = 0
         limit = 20
         sortMode = SortModes[0]
@@ -42,7 +42,7 @@ class YelpSearchSettings: NSObject {
             
             let codes = categories?.map{$0}
             
-            print("codes: \(String(describing: codes))")
+            track("codes: \(String(describing: codes))")
             
             categories?.forEach({ (category) in
                 print(category.name)
@@ -55,7 +55,12 @@ class YelpSearchSettings: NSObject {
 //        }
         
         parameters["deals_filter"] = dealsOn as AnyObject?
-        parameters["radius_filter"] = distance.metersString()
+        
+        let distanceMeters = distance.metersString()
+        if distanceMeters != nil {
+            parameters["radius_filter"] = distanceMeters
+        }
+        
         parameters["limit"] = limit as AnyObject
         parameters["offset"] = offset as AnyObject
         

@@ -13,13 +13,13 @@ struct Distance {
     var miles: Double?
     var name: String
     
-    let milesPerMeter = 0.000621371
+    let metersPerMile = 1609.344498
     
-    func metersString() -> String {
+    func metersString() -> String? {
         guard let m = miles else {
-            return ""
+            return nil
         }
-        return String(format: "%.2f mi", milesPerMeter * m)
+        return String(format: "%.0f", metersPerMile * m)
     }
 }
 

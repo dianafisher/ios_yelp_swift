@@ -9,7 +9,6 @@
 import UIKit
 
 @objc protocol FiltersViewControllerDelegate {
-    @objc optional func filtersViewController(_ filtersViewController: FiltersViewController, didUpdateFilters filters:[String:Any])
     
     @objc optional func filtersViewController(_ filtersViewController: FiltersViewController, didUpdateSearchSettings searchSettings: YelpSearchSettings)
 }
@@ -81,7 +80,7 @@ class FiltersViewController: UIViewController {
         // check if deals switch is on
         filters["deals"] = dealsSwitchIsOn
         
-        delegate?.filtersViewController!(self, didUpdateFilters: filters)
+        //delegate?.filtersViewController!(self, didUpdateFilters: filters)
         delegate?.filtersViewController!(self, didUpdateSearchSettings: searchSettings!)
     }
     
@@ -91,7 +90,7 @@ class FiltersViewController: UIViewController {
             let row = indexPath.row
             
             let distance = Distances[row]
-            track("selected distance \(distance.name)")
+//            track("selected distance: \(distance.name)")
             
             searchSettings?.distance = distance
         }
