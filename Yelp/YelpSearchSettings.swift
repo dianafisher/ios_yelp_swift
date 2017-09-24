@@ -16,7 +16,7 @@ class YelpSearchSettings: NSObject {
     var limit: Int
     var distance: Distance
     var sortMode: SortMode
-    var categories: [Category]?
+    var categories: [Category]
     var dealsOn: Bool
     var location: CLLocation
     
@@ -38,22 +38,15 @@ class YelpSearchSettings: NSObject {
         
         parameters["sort"] = sortMode.code
         
-        if categories != nil && categories!.count > 0 {
+        if categories.count > 0 {
             
-            let codes = categories?.map{$0}
+            let codes = categories.map{$0.code}
             
             track("codes: \(String(describing: codes))")
             
-            categories?.forEach({ (category) in
-                print(category.name)
-            })
-
+            parameters["category_filter"] = codes.joined(separator: ",")
         }
-        
-//        if categories != nil && categories!.count > 0 {
-//            parameters["category_filter"] = (categories!).joined(separator: ",") as AnyObject?
-//        }
-        
+                
         parameters["deals_filter"] = dealsOn as AnyObject?
         
         let distanceMeters = distance.metersString()

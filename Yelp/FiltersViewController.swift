@@ -26,6 +26,9 @@ class FiltersViewController: UIViewController {
     
     fileprivate var categorySwitchStates = [Int:Bool]()
     fileprivate var sectionsOpen = [Bool]()
+    fileprivate var dealsSwitchIsOn: Bool = false
+    fileprivate var sortMode: SortMode = SortModes[0]
+    fileprivate var distance: Distance = Distances[0]
     
     var searchSettings: YelpSearchSettings?
     
@@ -39,9 +42,35 @@ class FiltersViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         
+        // Set the user interface based on the current search settings
+        initializeUI()
+        
         // Set navigationBar tint colors
         navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.8288504481, green: 0.1372715533, blue: 0.1384659708, alpha: 1)
         navigationController?.navigationBar.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+    }
+    
+    fileprivate func initializeUI() {
+        
+        // Set deal switch
+        dealsSwitchIsOn = (searchSettings?.dealsOn)!
+        
+        let categories = searchSettings!.categories
+        
+        // Set category switches based on current search settings
+        for (index, element) in Categories.enumerated() {
+
+            if categories.contains( where: {$0.code == element.code}) {
+
+                categorySwitchStates[index] = true
+            }
+        }
+
+        // Set sort mode
+        sortMode = searchSettings!.sortMode
+        
+        // Set distance
+        distance = searchSettings!.distance
     }
 
     override func didReceiveMemoryWarning() {
@@ -56,25 +85,27 @@ class FiltersViewController: UIViewController {
     
     @IBAction func onSearchPressed(_ sender: Any) {
         dismiss(animated: true, completion: nil)
-        
-        var filters = [String: Any]()
-        
-        var selectedCategories = [String]()
+
+        // Gather the selected categories
+        var selectedCategories = [Category]()
         
         for (row,isOn) in categorySwitchStates {
             if isOn {
-                // add the filter to an array of categories
-                selectedCategories.append(Categories[row].code)
+                selectedCategories.append(Categories[row])
             }
         }
         
         if selectedCategories.count > 0 {
-            filters["categories"] = selectedCategories
+            searchSettings?.categories = selectedCategories
         }
         
-        track("filters: \(filters)")
-                
-        //delegate?.filtersViewController!(self, didUpdateFilters: filters)
+        track("searchSettings categories \(String(describing: searchSettings?.categories))")
+        
+        // Set the values on searchSettings
+        searchSettings?.dealsOn = dealsSwitchIsOn
+        searchSettings?.distance = distance
+        searchSettings?.sortMode = sortMode
+        
         delegate?.filtersViewController!(self, didUpdateSearchSettings: searchSettings!)
     }
     
@@ -83,10 +114,7 @@ class FiltersViewController: UIViewController {
         if sectionsOpen[indexPath.section] {
             let row = indexPath.row
             
-            let distance = Distances[row]
-//            track("selected distance: \(distance.name)")
-            
-            searchSettings?.distance = distance
+            distance = Distances[row]
         }
         
         sectionsOpen[indexPath.section] = !sectionsOpen[indexPath.section]
@@ -102,10 +130,7 @@ class FiltersViewController: UIViewController {
         if sectionsOpen[indexPath.section] {
             let row = indexPath.row
             
-            let sortMode = SortModes[row]
-            track("selected sort mode \(sortMode.name)")
-            
-            searchSettings?.sortMode = sortMode
+            sortMode = SortModes[row]
         }
         
         sectionsOpen[indexPath.section] = !sectionsOpen[indexPath.section]
@@ -205,7 +230,7 @@ extension FiltersViewController: UITableViewDataSource {
             cell.delegate = self
             
             // Set the value of the switch based on the search settings
-            cell.onSwitch.isOn = searchSettings?.dealsOn ?? false
+            cell.onSwitch.isOn = dealsSwitchIsOn
             return cell
         }
 
@@ -214,7 +239,7 @@ extension FiltersViewController: UITableViewDataSource {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: dropDownCellReuseIdentifier, for: indexPath) as! DropDownCell
             
-            let selectedDistance = searchSettings!.distance
+            let selectedDistance = distance
             
             // Find the index of the selectedDistance in the Distances array
             let selectedDistanceIndex = Distances.index(where: {(d) -> Bool in
@@ -246,7 +271,7 @@ extension FiltersViewController: UITableViewDataSource {
         else if section == YelpFilter.sortBy.rawValue {
             let cell = tableView.dequeueReusableCell(withIdentifier: dropDownCellReuseIdentifier, for: indexPath) as! DropDownCell
 
-            let selectedSortMode = searchSettings!.sortMode
+            let selectedSortMode = sortMode
             
             // Find the index of the selectedSortMode in the SortModes array
             let selectedSortModeIndex = SortModes.index(where: {(s) -> Bool in
@@ -274,13 +299,6 @@ extension FiltersViewController: UITableViewDataSource {
             
         // Categories
         else {
-//            let cell = tableView.dequeueReusableCell(withIdentifier: "DropDownCell", for: indexPath) as! DropDownCell
-//            
-//            cell.titleLabel.text = categories[indexPath.row]["name"]!
-//            if indexPath.row > 0 {
-//                cell.statusImageView.image = UIImage (named: "unselected")
-//            }
-//            return cell
             
             let cell = tableView.dequeueReusableCell(withIdentifier: switchCellReuseIdentifier, for: indexPath) as! SwitchCell
             cell.switchLabel.text = Categories[indexPath.row].name
@@ -301,7 +319,7 @@ extension FiltersViewController: SwitchCellDelegate {
         let section = indexPath?.section
         
         if section == YelpFilter.deals.rawValue {
-            searchSettings?.dealsOn = value
+            dealsSwitchIsOn = value
         }
         
         if section == YelpFilter.category.rawValue {
