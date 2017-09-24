@@ -28,6 +28,7 @@
 		DF0C68D51F7711CD00AF1037 /* SortMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0C68D41F7711CD00AF1037 /* SortMode.swift */; };
 		DF0C68D71F77138F00AF1037 /* Filter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0C68D61F77138F00AF1037 /* Filter.swift */; };
 		DF0C68DD1F7718FA00AF1037 /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0C68DC1F7718FA00AF1037 /* UserDefaultsManager.swift */; };
+		DF0C68E61F78326000AF1037 /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0C68E51F78326000AF1037 /* DetailsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,6 +73,7 @@
 		DF0C68D81F77173900AF1037 /* AFNetworking.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AFNetworking.framework; path = "../../../../Library/Developer/Xcode/DerivedData/Yelp-bwrrfbnlnzxuadhjznhkwftptvdd/Build/Products/Debug-iphonesimulator/AFNetworking/AFNetworking.framework"; sourceTree = "<group>"; };
 		DF0C68D91F77173900AF1037 /* BDBOAuth1Manager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BDBOAuth1Manager.framework; path = "../../../../Library/Developer/Xcode/DerivedData/Yelp-bwrrfbnlnzxuadhjznhkwftptvdd/Build/Products/Debug-iphonesimulator/BDBOAuth1Manager/BDBOAuth1Manager.framework"; sourceTree = "<group>"; };
 		DF0C68DC1F7718FA00AF1037 /* UserDefaultsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
+		DF0C68E51F78326000AF1037 /* DetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailsViewController.swift; sourceTree = "<group>"; };
 		EF53DC2D7A8303A68532E7C6 /* Pods-Yelp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Yelp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Yelp/Pods-Yelp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -183,6 +185,7 @@
 			children = (
 				22AAAA9B1AEA1EC300A544AF /* BusinessesViewController.swift */,
 				DF0C68C21F746A4A00AF1037 /* FiltersViewController.swift */,
+				DF0C68E51F78326000AF1037 /* DetailsViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -445,6 +448,7 @@
 				DF0C68CD1F76217900AF1037 /* YelpSearchSettings.swift in Sources */,
 				DF0C68D71F77138F00AF1037 /* Filter.swift in Sources */,
 				DF0C68C71F75810200AF1037 /* DropDownCell.swift in Sources */,
+				DF0C68E61F78326000AF1037 /* DetailsViewController.swift in Sources */,
 				22AAAA991AEA0A9700A544AF /* Business.swift in Sources */,
 				222D8A7D19CCFAE000D2DB53 /* YelpClient.swift in Sources */,
 				DF0C68DD1F7718FA00AF1037 /* UserDefaultsManager.swift in Sources */,

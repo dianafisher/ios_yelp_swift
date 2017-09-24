@@ -9,6 +9,8 @@
 import UIKit
 
 private let businessCellReuseIdentifier = "BusinessCell"
+private let filtersSegueIdentifier = "FiltersSegue"
+private let detailsSegueIdentifier = "DetailsSegue"
 
 class BusinessesViewController: UIViewController {
         
@@ -181,11 +183,25 @@ class BusinessesViewController: UIViewController {
     
      // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let navigationController = segue.destination as! UINavigationController
         
-        let filtersViewController = navigationController.topViewController as! FiltersViewController
-        filtersViewController.searchSettings = searchSettings
-        filtersViewController.delegate = self
+        // Which segue is this?
+        if segue.identifier == filtersSegueIdentifier {
+            let navigationController = segue.destination as! UINavigationController
+            
+            let filtersViewController = navigationController.topViewController as! FiltersViewController
+            filtersViewController.searchSettings = searchSettings
+            filtersViewController.delegate = self
+        } else if segue.identifier == detailsSegueIdentifier {
+            
+            let cell = sender as! UITableViewCell
+            let indexPath = tableView.indexPath(for: cell)
+            let business = businesses?[indexPath!.row]
+            
+            let detailsViewController = segue.destination as! DetailsViewController
+            detailsViewController.business = business
+            
+            
+        }                
     }
     
 }
