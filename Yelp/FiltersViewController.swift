@@ -149,18 +149,18 @@ extension FiltersViewController: UITableViewDelegate {
         let section = indexPath.section
 
         switch (section) {
-        case YelpFilter.deals.rawValue:
-            break
-        case YelpFilter.distance.rawValue:
-            didSelectDistanceAt(indexPath)
-            break
-        case YelpFilter.sortBy.rawValue:
-            didSelectSortByAt(indexPath)
-            break
-        case YelpFilter.category.rawValue:
-            break
-        default:
-            break
+            case YelpFilter.deals.rawValue:
+                break
+            case YelpFilter.distance.rawValue:
+                didSelectDistanceAt(indexPath)
+                break
+            case YelpFilter.sortBy.rawValue:
+                didSelectSortByAt(indexPath)
+                break
+            case YelpFilter.category.rawValue:
+                break
+            default:
+                break
         }
         
     }
@@ -180,27 +180,22 @@ extension FiltersViewController: UITableViewDataSource {
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if sectionsOpen[section] {
-            switch(section) {
-                case YelpFilter.deals.rawValue:
-                    return 1
-                case YelpFilter.distance.rawValue:
-                    return Distances.count
-                case YelpFilter.sortBy.rawValue:
-                    return SortModes.count
-                case YelpFilter.category.rawValue:
-                    return Categories.count
-                default: return 0
-            }
-            
-        } else {
-            if section < 3 {
-                return 1
-            } else {
-                return 3
-            }
-        }
         
+        switch(section) {
+            case YelpFilter.deals.rawValue:
+                return 1
+                
+            case YelpFilter.distance.rawValue:
+                return sectionsOpen[section] ? Distances.count : 1
+                
+            case YelpFilter.sortBy.rawValue:
+                return sectionsOpen[section] ? SortModes.count : 1
+                
+            case YelpFilter.category.rawValue:
+                return sectionsOpen[section] ? Categories.count : 3
+                
+            default: return 0
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -218,8 +213,7 @@ extension FiltersViewController: UITableViewDataSource {
             cell.onSwitch.isOn = categorySwitchStates[indexPath.row] ?? false  // nil-coalescing operator
             return cell
         }
-            
-        // Section 1 is Distance
+                    
         else if section == YelpFilter.distance.rawValue {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: dropDownCellReuseIdentifier, for: indexPath) as! DropDownCell
@@ -230,7 +224,7 @@ extension FiltersViewController: UITableViewDataSource {
             let selectedDistanceIndex = Distances.index(where: {(d) -> Bool in
                 d.name == selectedDistance.name
             })
-                        
+            
             if sectionsOpen[section] {
                 
                 let distance = Distances[indexPath.row]
@@ -252,20 +246,30 @@ extension FiltersViewController: UITableViewDataSource {
             return cell
         }
             
-        // Section 2 is Sort By
         else if section == YelpFilter.sortBy.rawValue {
             let cell = tableView.dequeueReusableCell(withIdentifier: dropDownCellReuseIdentifier, for: indexPath) as! DropDownCell
-                        
-            cell.titleLabel.text = SortModes[indexPath.row].name
+
+            let selectedSortMode = searchSettings!.sortMode
+            
+            // Find the index of the selectedSortMode in the SortModes array
+            let selectedSortModeIndex = SortModes.index(where: {(s) -> Bool in
+                s.name == selectedSortMode.name
+            })
+            
             
             if sectionsOpen[section] {
-                if indexPath.row == 0 {
-                    cell.statusImageView.image = UIImage (named: "round-done-button")
+                let sortMode = SortModes[indexPath.row]
+                cell.titleLabel.text = sortMode.name
+                
+                if (indexPath.row == selectedSortModeIndex) {
+                    cell.statusImageView.image = #imageLiteral(resourceName: "round-done-button")
                 } else {
-                    cell.statusImageView.image = UIImage (named: "unselected")
+                    cell.statusImageView.image = #imageLiteral(resourceName: "unselected")
                 }
+                
             } else {
-                cell.statusImageView.image = UIImage (named: "drop-down-arrow")
+                cell.titleLabel.text = selectedSortMode.name
+                cell.statusImageView.image = #imageLiteral(resourceName: "drop-down-arrow")
             }
 
             return cell
