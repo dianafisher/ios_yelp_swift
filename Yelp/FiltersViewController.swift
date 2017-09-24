@@ -26,7 +26,6 @@ class FiltersViewController: UIViewController {
     
     fileprivate var categorySwitchStates = [Int:Bool]()
     fileprivate var sectionsOpen = [Bool]()
-    fileprivate var dealsSwitchIsOn: Bool = false
     
     var searchSettings: YelpSearchSettings?
     
@@ -39,8 +38,6 @@ class FiltersViewController: UIViewController {
         
         tableView.delegate = self
         tableView.dataSource = self
-        
-        dealsSwitchIsOn = (searchSettings?.dealsOn)!
         
         // Set navigationBar tint colors
         navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.8288504481, green: 0.1372715533, blue: 0.1384659708, alpha: 1)
@@ -76,10 +73,7 @@ class FiltersViewController: UIViewController {
         }
         
         track("filters: \(filters)")
-        
-        // check if deals switch is on
-        filters["deals"] = dealsSwitchIsOn
-        
+                
         //delegate?.filtersViewController!(self, didUpdateFilters: filters)
         delegate?.filtersViewController!(self, didUpdateSearchSettings: searchSettings!)
     }
@@ -210,7 +204,8 @@ extension FiltersViewController: UITableViewDataSource {
             cell.switchLabel.text = "Offering a Deal"
             cell.delegate = self
             
-            cell.onSwitch.isOn = categorySwitchStates[indexPath.row] ?? false
+            // Set the value of the switch based on the search settings
+            cell.onSwitch.isOn = searchSettings?.dealsOn ?? false
             return cell
         }
 
@@ -306,7 +301,7 @@ extension FiltersViewController: SwitchCellDelegate {
         let section = indexPath?.section
         
         if section == YelpFilter.deals.rawValue {
-            dealsSwitchIsOn = value
+            searchSettings?.dealsOn = value
         }
         
         if section == YelpFilter.category.rawValue {

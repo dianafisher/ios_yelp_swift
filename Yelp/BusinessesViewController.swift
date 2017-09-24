@@ -115,6 +115,7 @@ class BusinessesViewController: UIViewController {
     
     fileprivate func loadMoreData() {
         
+        // Make sure the offset is not greater than the total number of results
         var offset = searchSettings.offset
         let limit = searchSettings.limit
         
@@ -158,14 +159,11 @@ class BusinessesViewController: UIViewController {
         
     }
     
-    func hasMoreData() -> Bool {
+    fileprivate func hasMoreData() -> Bool {
         var offset = searchSettings.offset
         let limit = searchSettings.limit
         
         offset = offset + limit
-        
-        print("current offset: \(offset)")
-        print("totalResultCount: \(totalResultCount)")
         
         return offset < totalResultCount
     }
