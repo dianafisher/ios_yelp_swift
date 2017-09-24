@@ -15,14 +15,16 @@ The following **optional** features are implemented:
 
 * [x] Optional: Infinite scroll for restaurant results.
 * [ ] Optional: Implement map view of restaurant results.
-* [ ] Optional: Implement a custom switch.
+* [x] Optional: Implement a custom switch.
 * [x] Optional: Distance filter should expand as in the real Yelp app.
 * [ ] Optional: Categories should show a subset of the full list with a "See All" row to expand.
-* [ ] Optional: Implement the restaurant detail page.
+* [x] Optional: Implement the restaurant detail page.
 
 The following **additional** features are implemented:
 
-* [ ] Additional: 
+* [x] Additional: User sees an error message when there's a networking error.
+* [x] Additional: All images fade in as they are loading.
+* [x] Additional: Customize the navigation bar.
 
 ## Walkthrough of all user stories:
 
