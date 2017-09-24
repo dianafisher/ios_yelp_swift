@@ -76,10 +76,49 @@ class FiltersViewController: UIViewController {
             filters["categories"] = selectedCategories
         }
         
+        track("filters: \(filters)")
+        
         // check if deals switch is on
         filters["deals"] = dealsSwitchIsOn
         
         delegate?.filtersViewController!(self, didUpdateFilters: filters)
+    }
+    
+    fileprivate func didSelectDistanceAt(_ indexPath: IndexPath) {
+        
+        if sectionsOpen[indexPath.section] {
+            let row = indexPath.row
+            
+            let distance = Distances[row]
+            track("selected distance \(distance.name)")
+            
+            searchSettings?.distance = distance
+        }
+        
+        sectionsOpen[indexPath.section] = !sectionsOpen[indexPath.section]
+        
+        // Reload this section
+        let sectionIndex = IndexSet(integer: indexPath.section)
+        tableView.reloadSections(sectionIndex, with: UITableViewRowAnimation.fade)
+        
+    }
+    
+    fileprivate func didSelectSortByAt(_ indexPath: IndexPath) {
+        
+        if sectionsOpen[indexPath.section] {
+            let row = indexPath.row
+            
+            let sortMode = SortModes[row]
+            track("selected sort mode \(sortMode.name)")
+            
+            searchSettings?.sortMode = sortMode
+        }
+        
+        sectionsOpen[indexPath.section] = !sectionsOpen[indexPath.section]
+        
+        // Reload this section
+        let sectionIndex = IndexSet(integer: indexPath.section)
+        tableView.reloadSections(sectionIndex, with: UITableViewRowAnimation.fade)
     }
     
 
@@ -94,26 +133,37 @@ class FiltersViewController: UIViewController {
     */
 }
 
+public func track(_ message: String, file: String = #file, function: String = #function, line: Int = #line ) {
+    
+    let filename = (file as NSString).lastPathComponent
+    print("✳️\(function):\(filename):\(line) - \(message) ")
+    
+}
+
+
 // MARK: - UITableViewDelegate
 extension FiltersViewController: UITableViewDelegate {
     // table view delegate methods
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let section = indexPath.section
-        
-        if (section > 0) {
-            let row = indexPath.row            
-            print("selected row \(row)")
-            
-            sectionsOpen[indexPath.section] = !sectionsOpen[indexPath.section]
-            
-            // Reload this section
-            let sectionIndex = IndexSet(integer: indexPath.section)
-            tableView.reloadSections(sectionIndex, with: UITableViewRowAnimation.fade)
+
+        switch (section) {
+        case YelpFilter.deals.rawValue:
+            break
+        case YelpFilter.distance.rawValue:
+            didSelectDistanceAt(indexPath)
+            break
+        case YelpFilter.sortBy.rawValue:
+            didSelectSortByAt(indexPath)
+            break
+        case YelpFilter.category.rawValue:
+            break
+        default:
+            break
         }
         
     }
-    
 }
 
 // MARK: - UITableViewDataSource
@@ -121,26 +171,26 @@ extension FiltersViewController: UITableViewDataSource {
     // table view data source methods
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return YelpSearchSettings.filterNames[section]
+        return Filters[section].name
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return YelpSearchSettings.filterNames.count
+        return Filters.count
     }
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if sectionsOpen[section] {
             switch(section) {
-            case 0:
-                return 1
-            case 1:
-                return Distances.count
-            case 2:
-                return SortModes.count
-            case 3:
-                return Categories.count
-            default: return 0
+                case YelpFilter.deals.rawValue:
+                    return 1
+                case YelpFilter.distance.rawValue:
+                    return Distances.count
+                case YelpFilter.sortBy.rawValue:
+                    return SortModes.count
+                case YelpFilter.category.rawValue:
+                    return Categories.count
+                default: return 0
             }
             
         } else {
@@ -158,7 +208,7 @@ extension FiltersViewController: UITableViewDataSource {
         let section = indexPath.section
         
         // Section 0 is Deals
-        if section == 0 {
+        if section == YelpFilter.deals.rawValue {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: switchCellReuseIdentifier, for: indexPath) as! SwitchCell
             
@@ -170,21 +220,32 @@ extension FiltersViewController: UITableViewDataSource {
         }
             
         // Section 1 is Distance
-        else if section == 1 {
+        else if section == YelpFilter.distance.rawValue {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: dropDownCellReuseIdentifier, for: indexPath) as! DropDownCell
             
-            cell.titleLabel.text = Distances[indexPath.row].name
+            let selectedDistance = searchSettings!.distance
             
+            // Find the index of the selectedDistance in the Distances array
+            let selectedDistanceIndex = Distances.index(where: {(d) -> Bool in
+                d.name == selectedDistance.name
+            })
+                        
             if sectionsOpen[section] {
-                if indexPath.row == 0 {
-                    cell.statusImageView.image = UIImage (named: "round-done-button")
+                
+                let distance = Distances[indexPath.row]
+                cell.titleLabel.text = distance.name
+                
+                // if the distance at this row is our currently selected distance, then show a checkmark image
+                if (indexPath.row == selectedDistanceIndex) {
+                    cell.statusImageView.image = #imageLiteral(resourceName: "round-done-button")
                 } else {
-                    cell.statusImageView.image = UIImage (named: "unselected")
+                    cell.statusImageView.image = #imageLiteral(resourceName: "unselected")
                 }
                 
             } else {
-                cell.statusImageView.image = UIImage (named: "drop-down-arrow")
+                cell.titleLabel.text = selectedDistance.name
+                cell.statusImageView.image = #imageLiteral(resourceName: "drop-down-arrow")
             }
             
             
@@ -192,7 +253,7 @@ extension FiltersViewController: UITableViewDataSource {
         }
             
         // Section 2 is Sort By
-        else if section == 2 {
+        else if section == YelpFilter.sortBy.rawValue {
             let cell = tableView.dequeueReusableCell(withIdentifier: dropDownCellReuseIdentifier, for: indexPath) as! DropDownCell
                         
             cell.titleLabel.text = SortModes[indexPath.row].name
@@ -211,6 +272,7 @@ extension FiltersViewController: UITableViewDataSource {
         }
             
         // Last section is Categories
+            
         else {
 //            let cell = tableView.dequeueReusableCell(withIdentifier: "DropDownCell", for: indexPath) as! DropDownCell
 //            

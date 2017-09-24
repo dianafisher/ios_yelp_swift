@@ -10,13 +10,12 @@ import Foundation
 
 struct Filter {
     
-    var name: String
-    var index: Int
+    var name: String    
 }
 
 let Filters: [Filter] = [
-    Filter(name: "", index: 0),
-    Filter(name: "Distance", index: 1),
-    Filter(name: "Sort By", index: 2),
-    Filter(name: "Category", index: 3)
+    Filter(name: ""),
+    Filter(name: "Distance"),
+    Filter(name: "Sort By"),
+    Filter(name: "Category")
 ]

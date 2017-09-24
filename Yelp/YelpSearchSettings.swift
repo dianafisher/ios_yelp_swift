@@ -40,6 +40,10 @@ class YelpSearchSettings: NSObject {
         
         if categories != nil && categories!.count > 0 {
             
+            let codes = categories?.map{$0}
+            
+            print("codes: \(String(describing: codes))")
+            
             categories?.forEach({ (category) in
                 print(category.name)
             })
@@ -56,8 +60,6 @@ class YelpSearchSettings: NSObject {
         parameters["offset"] = offset as AnyObject
         
         return parameters
-    }
-    
-    static let filterNames = ["Deals", "Distance", "Sort By", "Category"]
+    }        
     
 }

@@ -24,7 +24,7 @@ struct Distance {
 }
 
 let Distances = [
-    Distance(miles: nil, name: "Best Match"),
+    Distance(miles: nil, name: "Auto"),
     Distance(miles: 0.3, name: "0.3 miles"),
     Distance(miles: 1.0, name: "1 mile"),
     Distance(miles: 5.0, name: "5 miles"),
