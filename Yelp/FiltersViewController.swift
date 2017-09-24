@@ -211,8 +211,9 @@ extension FiltersViewController: UITableViewDataSource {
                 return sectionsOpen[section] ? SortModes.count : 1
                 
             case YelpFilter.category.rawValue:
-                return sectionsOpen[section] ? Categories.count : 3
-                
+                return Categories.count
+//                return sectionsOpen[section] ? Categories.count : 3
+            
             default: return 0
         }
     }

@@ -90,6 +90,11 @@ class BusinessesViewController: UIViewController {
                 if let businesses = businesses {
                     self?.businesses = businesses
                     
+                    for business in businesses {
+                        print(business.name!)
+                        print(business.address!)
+                    }
+                    
                     // Update UI on the main thread
                     DispatchQueue.main.async(execute: {
                         self?.loadingMoreView?.stopAnimating()
@@ -102,7 +107,7 @@ class BusinessesViewController: UIViewController {
                 }
                 
                 if let error = error {
-                    print("Error: \(error)")
+                    print("Error: \(error)")                    
                     DispatchQueue.main.async {
                         // show the network error view
                         self?.networkErrorView.isHidden = false
