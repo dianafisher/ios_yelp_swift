@@ -18,6 +18,7 @@ class DetailsViewController: UIViewController {
     @IBOutlet weak var categoriesLabel: UILabel!
     @IBOutlet weak var addressLabel: UILabel!
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var phoneNumberLabel: UILabel!
     
     var business: Business!
     
@@ -26,15 +27,29 @@ class DetailsViewController: UIViewController {
 
         // Set navigationBar tint colors
         navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.8288504481, green: 0.1372715533, blue: 0.1384659708, alpha: 1)
-        navigationController?.navigationBar.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-
-        print(business)
+        navigationController?.navigationBar.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)        
         
         nameLabel.text = business.name
+        phoneNumberLabel.text = business.phoneNumber
         categoriesLabel.text = business.categories
         addressLabel.text = business.address
         reviewCountLabel.text = "\(business.reviewCount!) Reviews"
         ratingImageView.setImageWith(business.ratingImageURL!)
+        
+        print(business.coordinate ?? "none")
+        
+        if let centerLocation = business.coordinate {
+            let span = MKCoordinateSpanMake(0.1, 0.1)
+                        
+            let region = MKCoordinateRegionMake(centerLocation.coordinate, span)
+            mapView.setRegion(region, animated: false)
+            
+            // Add a map annotation
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = centerLocation.coordinate
+            annotation.title = business.name
+            mapView.addAnnotation(annotation)
+        }
         
         if let thumbUrl = business.imageURL
         {
@@ -61,7 +76,7 @@ class DetailsViewController: UIViewController {
             detailImageView.image = UIImage(named: "placeholder")
         }
 
-        
+        detailImageView.clipsToBounds = true
     }
 
     override func didReceiveMemoryWarning() {

@@ -90,7 +90,7 @@ class YelpClient: BDBOAuth1RequestOperationManager {
         return self.get("search", parameters: parameters,
                         success: { (operation: AFHTTPRequestOperation, response: Any) -> Void in
                             if let response = response as? [String: Any]{
-//                                print(response)
+                                print(response)
                                 let total = response["total"] as? Int
                                 print("total \(total ?? 0)")
                                 

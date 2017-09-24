@@ -92,10 +92,10 @@ class BusinessesViewController: UIViewController {
                 if let businesses = businesses {
                     self?.businesses = businesses
                     
-                    for business in businesses {
-                        print(business.name!)
-                        print(business.address!)
-                    }
+//                    for business in businesses {
+//                        print(business.name!)
+//                        print(business.address!)
+//                    }
                     
                     // Update UI on the main thread
                     DispatchQueue.main.async(execute: {
@@ -199,8 +199,7 @@ class BusinessesViewController: UIViewController {
             
             let detailsViewController = segue.destination as! DetailsViewController
             detailsViewController.business = business
-            
-            
+                        
         }                
     }
     
