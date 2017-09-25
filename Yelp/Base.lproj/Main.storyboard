@@ -137,34 +137,47 @@
                                     <constraint firstAttribute="height" constant="50" id="d4u-de-8ab"/>
                                 </constraints>
                             </view>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="PEs-Qj-6Yc">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="672"/>
+                            </mapView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="PEs-Qj-6Yc" firstAttribute="top" secondItem="hR0-74-jRp" secondAttribute="bottom" id="2a7-Q6-LsI"/>
                             <constraint firstItem="LW7-aE-Nms" firstAttribute="top" secondItem="XhR-oz-92f" secondAttribute="top" id="3nl-0r-JdB"/>
                             <constraint firstItem="VBY-gq-v8E" firstAttribute="top" secondItem="LW7-aE-Nms" secondAttribute="bottom" id="JAw-qz-BLj"/>
                             <constraint firstItem="LW7-aE-Nms" firstAttribute="leading" secondItem="XhR-oz-92f" secondAttribute="leading" id="MLS-pQ-UTk"/>
                             <constraint firstAttribute="trailing" secondItem="Iud-dB-6iW" secondAttribute="trailing" id="Mcq-LS-xvv"/>
+                            <constraint firstItem="VBY-gq-v8E" firstAttribute="top" secondItem="PEs-Qj-6Yc" secondAttribute="bottom" id="Sfa-6B-hhb"/>
+                            <constraint firstItem="PEs-Qj-6Yc" firstAttribute="leading" secondItem="XhR-oz-92f" secondAttribute="leading" id="TdA-Fq-BwW"/>
                             <constraint firstItem="Iud-dB-6iW" firstAttribute="leading" secondItem="XhR-oz-92f" secondAttribute="leading" id="gor-5L-yDy"/>
                             <constraint firstAttribute="trailing" secondItem="LW7-aE-Nms" secondAttribute="trailing" id="obY-5f-Lrr"/>
                             <constraint firstItem="Iud-dB-6iW" firstAttribute="top" secondItem="hR0-74-jRp" secondAttribute="bottom" id="qAb-pk-lX6"/>
+                            <constraint firstAttribute="trailing" secondItem="PEs-Qj-6Yc" secondAttribute="trailing" id="uWn-gs-B7e"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Search" id="H0F-e8-qg8">
                         <barButtonItem key="leftBarButtonItem" title="Filter" id="bw1-6J-9aI">
-                            <color key="tintColor" white="0.96999999999999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
                                 <segue destination="G09-9Z-pVP" kind="presentation" identifier="FiltersSegue" id="Fdj-Nl-67b"/>
                             </connections>
                         </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Map" id="1bG-V2-Z8c">
+                            <connections>
+                                <action selector="viewTogglePressed:" destination="2xI-yr-O5N" id="rVc-oe-Cgp"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="mapView" destination="PEs-Qj-6Yc" id="urI-Df-fNc"/>
                         <outlet property="networkErrorView" destination="Iud-dB-6iW" id="8ms-Mr-NVn"/>
                         <outlet property="tableView" destination="LW7-aE-Nms" id="NmE-Pr-pah"/>
+                        <outlet property="viewToggleButton" destination="1bG-V2-Z8c" id="7Us-Gz-py8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Fgb-4b-F1b" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2406.521739130435" y="363.58695652173918"/>
+            <point key="canvasLocation" x="2405.7971014492755" y="363.58695652173918"/>
         </scene>
         <!--Filter-->
         <scene sceneID="fly-a2-bXe">

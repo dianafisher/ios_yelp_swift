@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MapKit
 
 private let businessCellReuseIdentifier = "BusinessCell"
 private let filtersSegueIdentifier = "FiltersSegue"
@@ -16,15 +17,19 @@ class BusinessesViewController: UIViewController {
         
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var networkErrorView: UIView!
+    @IBOutlet weak var viewToggleButton: UIBarButtonItem!
+    @IBOutlet weak var mapView: MKMapView!
     
     var searchBar: UISearchBar!
     var loadingMoreView: InfiniteScrollActivityView?
-        
+    
     var searchSettings = YelpSearchSettings()
     
     var businesses: [Business]!
     var isMoreDataLoading = false
     var totalResultCount = 0
+    
+    // MARK: - View Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,12 +47,16 @@ class BusinessesViewController: UIViewController {
         tableView.estimatedRowHeight = 120
         
         navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.8288504481, green: 0.1372715533, blue: 0.1384659708, alpha: 1)
+        navigationController?.navigationBar.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         
         // Initialize the UISearchBar
         searchBar = UISearchBar()
         searchBar.delegate = self
         searchBar.text = searchSettings.searchTerm
         searchBar.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        
+        // Set map view hidden initially
+        mapView.isHidden = true
         
         if #available(iOS 9.0, *) {
             UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
@@ -76,7 +85,13 @@ class BusinessesViewController: UIViewController {
         doSearch()
     }
     
-    // MARK: - Search Network Call
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+
+    
+    // MARK: - Network Requests
     fileprivate func doSearch() {
         
         // Hide the network error view
@@ -92,14 +107,12 @@ class BusinessesViewController: UIViewController {
                 if let businesses = businesses {
                     self?.businesses = businesses
                     
-//                    for business in businesses {
-//                        print(business.name!)
-//                        print(business.address!)
-//                    }
-                    
                     // Update UI on the main thread
                     DispatchQueue.main.async(execute: {
                         self?.loadingMoreView?.stopAnimating()
+                        if !(self?.mapView.isHidden)! {
+                            self?.loadMap()
+                        }
                         self?.tableView.reloadData()
                     })
                 }
@@ -145,6 +158,9 @@ class BusinessesViewController: UIViewController {
                     DispatchQueue.main.async(execute: {
                         self?.loadingMoreView?.stopAnimating()
                         self?.tableView.reloadData()
+                        if !(self?.mapView.isHidden)! {
+                            self?.loadMap()
+                        }
                     })
                 }
                 
@@ -175,9 +191,51 @@ class BusinessesViewController: UIViewController {
         return offset < totalResultCount
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    // MARK: - Map View
+    
+    fileprivate func loadMap() {
+        
+        // If the map has annotations already, remove them.
+        let annotations = mapView.annotations
+        mapView.removeAnnotations(annotations)
+        
+        // Configure the map view
+        if businesses.count > 0 {
+            let firstBusiness = businesses[0]
+            if let centerLocation = firstBusiness.coordinate {
+                let region = MKCoordinateRegionMakeWithDistance(centerLocation.coordinate, 1000, 1000)
+                mapView.setRegion(region, animated: false)
+            }
+            
+            for business in businesses {
+                if let location = business.coordinate {
+                    // Add a map annotation
+                    let annotation = MKPointAnnotation()
+                    annotation.coordinate = location.coordinate
+                    annotation.title = business.name
+                    mapView.addAnnotation(annotation)
+                    print(location)
+                } else {
+                    print("no coordinate data for \(business.name ?? "business")")
+                }
+            }
+        }
+        
+        mapView.isHidden = false
+    }
+    
+    // MARK: - IBActions
+    
+    @IBAction func viewTogglePressed(_ sender: Any) {
+        
+        let title = viewToggleButton.title
+        if title == "Map" {
+            loadMap()
+            viewToggleButton.title = "List"
+        } else {
+            mapView.isHidden = true
+            viewToggleButton.title = "Map"
+        }
     }
     
     

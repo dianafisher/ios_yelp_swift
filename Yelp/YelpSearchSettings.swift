@@ -28,13 +28,15 @@ class YelpSearchSettings: NSObject {
         dealsOn = false
         distance = Distances[0]
         categories = [Category]()
-        location = CLLocation(latitude: 37.785771, longitude: -122.406165)  // San Francisco
+        location = CLLocation(latitude: 37.785771, longitude: -122.406165)  // San Francisco as default
     }
     
     func parameters() -> [String : Any] {
         
-        // Default the location to San Francisco
-        var parameters: [String : Any] = ["term": searchTerm as Any, "ll": "37.785771,-122.406165" as Any]
+        var parameters: [String : Any] = ["term": searchTerm as Any]
+        
+        let coordinateString = "\(location.coordinate.latitude),\(location.coordinate.longitude)"
+        parameters["ll"] = coordinateString as Any
         
         parameters["sort"] = sortMode.code
         
