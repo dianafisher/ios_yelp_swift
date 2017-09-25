@@ -17,8 +17,10 @@ enum YelpFilter: Int {
     case deals = 0, distance, sortBy, category
 }
 
+// MARK: - UITableViewCell reuse identifiers
 private let switchCellReuseIdentifier = "SwitchCell"
 private let dropDownCellReuseIdentifier = "DropDownCell"
+private let textCellReuseIdentifier = "TextCell"
 
 class FiltersViewController: UIViewController {
 
@@ -116,12 +118,8 @@ class FiltersViewController: UIViewController {
             distance = Distances[row]
         }
         
-        sectionsOpen[indexPath.section] = !sectionsOpen[indexPath.section]
-        
         // Reload this section
-        let sectionIndex = IndexSet(integer: indexPath.section)
-        tableView.reloadSections(sectionIndex, with: UITableViewRowAnimation.fade)
-        
+        reloadSectionAt(indexPath)
     }
     
     fileprivate func didSelectSortByAt(_ indexPath: IndexPath) {
@@ -132,9 +130,24 @@ class FiltersViewController: UIViewController {
             sortMode = SortModes[row]
         }
         
-        sectionsOpen[indexPath.section] = !sectionsOpen[indexPath.section]
+        // Reload this section
+        reloadSectionAt(indexPath)
+    }
+    
+    fileprivate func didSelectCategoryAt(_ indexPath: IndexPath) {
+        // If the section is open, do nothing
+        if sectionsOpen[indexPath.section] {
+            return
+        }
         
         // Reload this section
+        reloadSectionAt(indexPath)
+    }
+    
+    fileprivate func reloadSectionAt(_ indexPath: IndexPath) {
+        
+        sectionsOpen[indexPath.section] = !sectionsOpen[indexPath.section]
+        
         let sectionIndex = IndexSet(integer: indexPath.section)
         tableView.reloadSections(sectionIndex, with: UITableViewRowAnimation.fade)
     }
@@ -168,6 +181,7 @@ extension FiltersViewController: UITableViewDelegate {
                 didSelectSortByAt(indexPath)
                 break
             case YelpFilter.category.rawValue:
+                didSelectCategoryAt(indexPath)
                 break
             default:
                 break
@@ -202,8 +216,7 @@ extension FiltersViewController: UITableViewDataSource {
                 return sectionsOpen[section] ? SortModes.count : 1
                 
             case YelpFilter.category.rawValue:
-                return Categories.count
-//                return sectionsOpen[section] ? Categories.count : 3
+                return sectionsOpen[section] ? Categories.count : 4
             
             default: return 0
         }
@@ -292,12 +305,29 @@ extension FiltersViewController: UITableViewDataSource {
         // Categories
         else {
             
-            let cell = tableView.dequeueReusableCell(withIdentifier: switchCellReuseIdentifier, for: indexPath) as! SwitchCell
-            cell.switchLabel.text = Categories[indexPath.row].name
-            cell.delegate = self
-            cell.onSwitch.isOn = categorySwitchStates[indexPath.row] ?? false
+            if sectionsOpen[section] {
+                
+                // If the section is open, then just return the category name at this indexPath
+                let cell = tableView.dequeueReusableCell(withIdentifier: switchCellReuseIdentifier, for: indexPath) as! SwitchCell
+                cell.switchLabel.text = Categories[indexPath.row].name
+                cell.delegate = self
+                cell.onSwitch.isOn = categorySwitchStates[indexPath.row] ?? false
+                return cell
+            }
             
-            return cell
+            // Otherwise, return a SwitchCell for rows 0 through 2, but a text cell at row 3
+            print("indexPath row: \(indexPath.row)")
+            if (indexPath.row < 3) {
+                let cell = tableView.dequeueReusableCell(withIdentifier: switchCellReuseIdentifier, for: indexPath) as! SwitchCell
+                cell.switchLabel.text = Categories[indexPath.row].name
+                cell.delegate = self
+                cell.onSwitch.isOn = categorySwitchStates[indexPath.row] ?? false
+                return cell
+            } else {
+                let cell = tableView.dequeueReusableCell(withIdentifier: textCellReuseIdentifier, for: indexPath) as! TextCell
+                return cell
+            }
+            
         }
         
     }

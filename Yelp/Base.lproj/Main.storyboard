@@ -258,6 +258,26 @@
                                             <outlet property="titleLabel" destination="hqU-yw-pJf" id="TMZ-Yu-boQ"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="TextCell" id="Iim-8l-Jbs" customClass="TextCell" customModule="Yelp" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="205" width="414" height="75"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Iim-8l-Jbs" id="z0w-LI-YSp">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="74"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="See All" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8nk-1R-ILr">
+                                                    <rect key="frame" x="180.66666666666666" y="27" width="53" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="8nk-1R-ILr" firstAttribute="centerY" secondItem="z0w-LI-YSp" secondAttribute="centerY" id="FbR-8v-FPB"/>
+                                                <constraint firstItem="8nk-1R-ILr" firstAttribute="centerX" secondItem="z0w-LI-YSp" secondAttribute="centerX" id="Mu5-2b-Jcy"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
                                 </prototypes>
                             </tableView>
                         </subviews>

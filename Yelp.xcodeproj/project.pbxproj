@@ -29,6 +29,7 @@
 		DF0C68D71F77138F00AF1037 /* Filter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0C68D61F77138F00AF1037 /* Filter.swift */; };
 		DF0C68DD1F7718FA00AF1037 /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0C68DC1F7718FA00AF1037 /* UserDefaultsManager.swift */; };
 		DF0C68E61F78326000AF1037 /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0C68E51F78326000AF1037 /* DetailsViewController.swift */; };
+		DF0C68EA1F78A73300AF1037 /* TextCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0C68E91F78A73300AF1037 /* TextCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +75,7 @@
 		DF0C68D91F77173900AF1037 /* BDBOAuth1Manager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BDBOAuth1Manager.framework; path = "../../../../Library/Developer/Xcode/DerivedData/Yelp-bwrrfbnlnzxuadhjznhkwftptvdd/Build/Products/Debug-iphonesimulator/BDBOAuth1Manager/BDBOAuth1Manager.framework"; sourceTree = "<group>"; };
 		DF0C68DC1F7718FA00AF1037 /* UserDefaultsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
 		DF0C68E51F78326000AF1037 /* DetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailsViewController.swift; sourceTree = "<group>"; };
+		DF0C68E91F78A73300AF1037 /* TextCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextCell.swift; sourceTree = "<group>"; };
 		EF53DC2D7A8303A68532E7C6 /* Pods-Yelp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Yelp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Yelp/Pods-Yelp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -170,12 +172,12 @@
 			isa = PBXGroup;
 			children = (
 				22AAAA981AEA0A9700A544AF /* Business.swift */,
-				DF0C68CC1F76217900AF1037 /* YelpSearchSettings.swift */,
-				DF0C68D01F76F12A00AF1037 /* Distance.swift */,
 				DF0C68D21F76FADE00AF1037 /* Category.swift */,
-				DF0C68D41F7711CD00AF1037 /* SortMode.swift */,
+				DF0C68D01F76F12A00AF1037 /* Distance.swift */,
 				DF0C68D61F77138F00AF1037 /* Filter.swift */,
+				DF0C68D41F7711CD00AF1037 /* SortMode.swift */,
 				DF0C68DC1F7718FA00AF1037 /* UserDefaultsManager.swift */,
+				DF0C68CC1F76217900AF1037 /* YelpSearchSettings.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -206,9 +208,10 @@
 			isa = PBXGroup;
 			children = (
 				DF0C68BA1F7316A600AF1037 /* BusinessCell.swift */,
-				DF0C68C01F74691700AF1037 /* SwitchCell.swift */,
-				DF0C68C41F74BDEC00AF1037 /* InfiniteScrollActivityView.swift */,
 				DF0C68C61F75810200AF1037 /* DropDownCell.swift */,
+				DF0C68C41F74BDEC00AF1037 /* InfiniteScrollActivityView.swift */,
+				DF0C68C01F74691700AF1037 /* SwitchCell.swift */,
+				DF0C68E91F78A73300AF1037 /* TextCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -441,6 +444,7 @@
 			files = (
 				DF0C68D51F7711CD00AF1037 /* SortMode.swift in Sources */,
 				DF0C68C51F74BDEC00AF1037 /* InfiniteScrollActivityView.swift in Sources */,
+				DF0C68EA1F78A73300AF1037 /* TextCell.swift in Sources */,
 				DF0C68BB1F7316A600AF1037 /* BusinessCell.swift in Sources */,
 				22AAAA9C1AEA1EC300A544AF /* BusinessesViewController.swift in Sources */,
 				DF0C68C31F746A4A00AF1037 /* FiltersViewController.swift in Sources */,
