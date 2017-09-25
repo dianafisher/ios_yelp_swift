@@ -111,7 +111,7 @@ class BusinessesViewController: UIViewController {
                     DispatchQueue.main.async(execute: {
                         self?.loadingMoreView?.stopAnimating()
                         if !(self?.mapView.isHidden)! {
-                            self?.loadMap()
+                            self?.showMap()
                         }
                         self?.tableView.reloadData()
                     })
@@ -159,7 +159,7 @@ class BusinessesViewController: UIViewController {
                         self?.loadingMoreView?.stopAnimating()
                         self?.tableView.reloadData()
                         if !(self?.mapView.isHidden)! {
-                            self?.loadMap()
+                            self?.showMap()
                         }
                     })
                 }
@@ -193,7 +193,7 @@ class BusinessesViewController: UIViewController {
     
     // MARK: - Map View
     
-    fileprivate func loadMap() {
+    fileprivate func showMap() {
         
         // If the map has annotations already, remove them.
         let annotations = mapView.annotations
@@ -221,7 +221,11 @@ class BusinessesViewController: UIViewController {
             }
         }
         
-        mapView.isHidden = false
+        UIView.transition(from: tableView, to: mapView, duration: 0.5, options: [.transitionCrossDissolve, .showHideTransitionViews], completion: nil)
+    }
+    
+    fileprivate func hideMap() {
+        UIView.transition(from: mapView, to: tableView, duration: 0.5, options: [.transitionCrossDissolve, .showHideTransitionViews], completion: nil)
     }
     
     // MARK: - IBActions
@@ -230,10 +234,10 @@ class BusinessesViewController: UIViewController {
         
         let title = viewToggleButton.title
         if title == "Map" {
-            loadMap()
+            showMap()
             viewToggleButton.title = "List"
         } else {
-            mapView.isHidden = true
+            hideMap()
             viewToggleButton.title = "Map"
         }
     }
