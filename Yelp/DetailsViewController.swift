@@ -35,7 +35,7 @@ class DetailsViewController: UIViewController {
         addressLabel.text = business.address
         reviewCountLabel.text = "\(business.reviewCount!) Reviews"
         ratingImageView.setImageWith(business.ratingImageURL!)
-            
+        
         if let centerLocation = business.coordinate {
             let span = MKCoordinateSpanMake(0.1, 0.1)
                         
@@ -54,7 +54,7 @@ class DetailsViewController: UIViewController {
             let imageRequest = URLRequest(url: thumbUrl)
             detailImageView.setImageWith(
                 imageRequest,
-                placeholderImage: UIImage(named: "placeholder"),
+                placeholderImage: #imageLiteral(resourceName: "placeholder"),
                 success: { (imageRequest, imageResponse, image) -> Void in
                     if imageResponse != nil {
                         self.detailImageView.alpha = 0.0
@@ -68,10 +68,10 @@ class DetailsViewController: UIViewController {
                     
             }, failure: { (imageRequest, imageResponse, error) -> Void in
                 print(error)
-                self.detailImageView.image = UIImage(named: "placeholder")
+                self.detailImageView.image = #imageLiteral(resourceName: "placeholder")
             })
         } else {
-            detailImageView.image = UIImage(named: "placeholder")
+            detailImageView.image = #imageLiteral(resourceName: "placeholder")
         }
 
         detailImageView.clipsToBounds = true
