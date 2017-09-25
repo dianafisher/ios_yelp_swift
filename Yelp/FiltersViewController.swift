@@ -97,10 +97,7 @@ class FiltersViewController: UIViewController {
             }
         }
         
-        if selectedCategories.count > 0 {
-            searchSettings?.categories = selectedCategories
-        }
-                
+        searchSettings?.categories = selectedCategories                
         
         // Set the values on searchSettings
         searchSettings?.dealsOn = dealsSwitchIsOn
@@ -305,9 +302,8 @@ extension FiltersViewController: UITableViewDataSource {
         // Categories
         else {
             
+            // If the section is open, then just return the category name at this indexPath
             if sectionsOpen[section] {
-                
-                // If the section is open, then just return the category name at this indexPath
                 let cell = tableView.dequeueReusableCell(withIdentifier: switchCellReuseIdentifier, for: indexPath) as! SwitchCell
                 cell.switchLabel.text = Categories[indexPath.row].name
                 cell.delegate = self
@@ -316,7 +312,7 @@ extension FiltersViewController: UITableViewDataSource {
             }
             
             // Otherwise, return a SwitchCell for rows 0 through 2, but a text cell at row 3
-            print("indexPath row: \(indexPath.row)")
+            
             if (indexPath.row < 3) {
                 let cell = tableView.dequeueReusableCell(withIdentifier: switchCellReuseIdentifier, for: indexPath) as! SwitchCell
                 cell.switchLabel.text = Categories[indexPath.row].name
