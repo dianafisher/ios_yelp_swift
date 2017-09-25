@@ -44,8 +44,6 @@ class YelpSearchSettings: NSObject {
             
             let codes = categories.map{$0.code}
             
-            track("codes: \(String(describing: codes))")
-            
             parameters["category_filter"] = codes.joined(separator: ",")
         }
                 
@@ -58,17 +56,8 @@ class YelpSearchSettings: NSObject {
         
         parameters["limit"] = limit as AnyObject
         parameters["offset"] = offset as AnyObject
-        
-        track("parameters \(parameters)")
-        
+                
         return parameters
     }
-    
-    public func track(_ message: String, file: String = #file, function: String = #function, line: Int = #line ) {
         
-        let filename = (file as NSString).lastPathComponent
-        print("🅿️\(function):\(filename):\(line) - \(message) ")
-        
-    }
-    
 }

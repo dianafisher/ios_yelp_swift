@@ -98,8 +98,7 @@ class FiltersViewController: UIViewController {
         if selectedCategories.count > 0 {
             searchSettings?.categories = selectedCategories
         }
-        
-        track("searchSettings categories \(String(describing: searchSettings?.categories))")
+                
         
         // Set the values on searchSettings
         searchSettings?.dealsOn = dealsSwitchIsOn
@@ -151,14 +150,6 @@ class FiltersViewController: UIViewController {
     }
     */
 }
-
-public func track(_ message: String, file: String = #file, function: String = #function, line: Int = #line ) {
-    
-    let filename = (file as NSString).lastPathComponent
-    print("✳️\(function):\(filename):\(line) - \(message) ")
-    
-}
-
 
 // MARK: - UITableViewDelegate
 extension FiltersViewController: UITableViewDelegate {

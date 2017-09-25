@@ -35,9 +35,7 @@ class DetailsViewController: UIViewController {
         addressLabel.text = business.address
         reviewCountLabel.text = "\(business.reviewCount!) Reviews"
         ratingImageView.setImageWith(business.ratingImageURL!)
-        
-        print(business.coordinate ?? "none")
-        
+            
         if let centerLocation = business.coordinate {
             let span = MKCoordinateSpanMake(0.1, 0.1)
                         
