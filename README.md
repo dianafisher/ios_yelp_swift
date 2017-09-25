@@ -28,7 +28,7 @@ The following **additional** features are implemented:
 
 ## Walkthrough of all user stories:
 
-<img src='' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://github.com/dianafisher/ios_yelp_swift/blob/master/yelp.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
