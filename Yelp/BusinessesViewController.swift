@@ -201,12 +201,14 @@ class BusinessesViewController: UIViewController {
         
         // Configure the map view
         if businesses.count > 0 {
+            // Center the map at the first business in the array.
             let firstBusiness = businesses[0]
             if let centerLocation = firstBusiness.coordinate {
                 let region = MKCoordinateRegionMakeWithDistance(centerLocation.coordinate, 1000, 1000)
                 mapView.setRegion(region, animated: false)
             }
             
+            // Load annotation for each business
             for business in businesses {
                 if let location = business.coordinate {
                     // Add a map annotation
@@ -214,9 +216,7 @@ class BusinessesViewController: UIViewController {
                     annotation.coordinate = location.coordinate
                     annotation.title = business.name
                     mapView.addAnnotation(annotation)
-                    print(location)
-                } else {
-                    print("no coordinate data for \(business.name ?? "business")")
+                    
                 }
             }
         }
